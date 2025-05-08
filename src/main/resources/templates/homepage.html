@@ -10,27 +10,7 @@
       href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
     />
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              "cola-red": "#c00a27",
-              "cola-dark": "#1a1a1a",
-              "cola-gold": "#d4af37",
-            },
-            backgroundImage: {
-              "cola-gradient":
-                "radial-gradient(circle,rgba(224, 202, 202, 1) 0%, rgba(255, 0, 0, 1) 91%);",
-            },
-            fontFamily: {
-              display: ['"Bebas Neue"', "sans-serif"],
-              body: ['"Open Sans"', "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
@@ -48,57 +28,7 @@
   </head>
 
   <body class="bg-cola-gradient text-white font-body">
-    <nav class="bg-black py-4 px-6 border-b border-cola-red">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <!-- Logo/Left Side -->
-          <div class="flex items-center">
-            <a href="#" class="text-2xl font-display text-cola-red"
-              >Do and Drinks</a
-            >
-          </div>
-
-          <!-- Center Navigation Links -->
-          <div class="hidden md:flex items-center space-x-8">
-            <a
-              href="/about"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
-              >About</a
-            >
-            <a
-              href="/menu"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
-              >Menu</a
-            >
-
-            <a
-              href="/collaboration"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
-              >Collaboration</a
-            >
-
-            <a
-              href="/contact"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
-              >Contact Us</a
-            >
-          </div>
-
-          <!-- Right Side Elements -->
-          <div class="flex items-center space-x-4">
-            <!-- Language Selector -->
-
-            <!-- Download App Button -->
-            <a
-              href="/download"
-              class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
-            >
-              Download App
-            </a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <div th:replace="~{fragments/navbar :: main-navbar}"></div>
 
     <!-- Hero Section -->
     <section class="relative">
@@ -119,13 +49,11 @@
           <!-- Slide 2 -->
           <div class="swiper-slide relative">
             <img
-              src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+              src="/images/hero2.png"
               alt="Coffee Selection"
               class="w-full h-screen object-cover"
             />
-            <div
-              class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"
-            >
+            <div class="absolute inset-0flex items-center justify-center">
               <div class="text-center px-4">
                 <h1
                   class="text-4xl md:text-6xl lg:text-7xl font-display mb-6 text-cola-gold"

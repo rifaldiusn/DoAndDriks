@@ -9,7 +9,8 @@ module.exports = {
         "cola-gold": "#d4af37",
       },
       backgroundImage: {
-        "cola-gradient": "radial-gradient(circle, rgba(224, 202, 202, 1) 0%, rgba(255, 0, 0, 1) 91%)",
+        "cola-gradient":
+          "radial-gradient(circle, rgba(224, 202, 202, 1) 0%, rgba(255, 0, 0, 1) 91%)",
       },
       fontFamily: {
         display: ['"Bebas Neue"', "sans-serif"],
@@ -17,5 +18,10 @@ module.exports = {
       },
     },
   },
+  injectGlobalStyles: {
+    "@import": [
+      "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap",
+    ],
+  },
   plugins: [],
-}
+};

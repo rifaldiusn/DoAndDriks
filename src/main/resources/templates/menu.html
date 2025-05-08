@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="en"
-xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>ColaCrush - Our Menu</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/main.css}" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <!-- ... (same head content as base.html) ... -->
   </head>
-
+  <div th:replace="~{fragments/navbar :: main-navbar}"></div>
   <body class="bg-black text-white font-body">
-    <jsp:include page="/navbar.html"
-      ><jsp:param name="activePage" value="about" />
-    </jsp:include>
-
     <main class="min-h-screen">
       <!-- Hero Section with Gradient -->
       <div class="bg-cola-gradient py-20">

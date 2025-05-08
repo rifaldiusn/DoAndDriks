@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 public class MinumanController {
-    private final MinumanRepository minumanRepository;
+    private final MinumanRepository minumanRepository = null;
     public List<Minuman> getAllMinuman() {
         return null;
     }

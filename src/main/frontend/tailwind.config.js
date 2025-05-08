@@ -2,7 +2,20 @@
 module.exports = {
   content: ["../resources/templates/**/*.{html,js}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "cola-red": "#c00a27",
+        "cola-dark": "#1a1a1a",
+        "cola-gold": "#d4af37",
+      },
+      backgroundImage: {
+        "cola-gradient": "radial-gradient(circle, rgba(224, 202, 202, 1) 0%, rgba(255, 0, 0, 1) 91%)",
+      },
+      fontFamily: {
+        display: ['"Bebas Neue"', "sans-serif"],
+        body: ['"Open Sans"', "sans-serif"],
+      },
+    },
   },
   plugins: [],
 }

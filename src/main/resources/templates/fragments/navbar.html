@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- Navbar Fragment -->
+    <nav
+      th:fragment="main-navbar"
+      class="bg-black py-4 px-6 border-b border-cola-red"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <!-- Logo/Left Side -->
+          <div class="flex items-center">
+            <a th:href="@{/}" class="text-3xl font-display text-cola-red"
+              >Do and Drinks</a
+            >
+          </div>
+
+          <!-- Center Navigation Links -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              th:href="@{/about}"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              >About</a
+            >
+            <a
+              th:href="@{/menu}"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              >Menu</a
+            >
+            <a
+              th:href="@{/collaboration}"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              >Collaboration</a
+            >
+            <a
+              th:href="@{/contact}"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              >Contact Us</a
+            >
+          </div>
+
+          <!-- Right Side Elements -->
+          <div class="flex items-center space-x-4">
+            <a
+              th:href="@{/download}"
+              class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Download App
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </body>
+</html>

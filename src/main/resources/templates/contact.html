@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>ColaCrush - Contact Us</title>
+    <meta charset="UTF-8" />
+    <link th:href="@{/main.css}" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "cola-red": "#c00a27",
+              "cola-dark": "#1a1a1a",
+              "cola-gold": "#d4af37",
+            },
+            fontFamily: {
+              display: ['"Bebas Neue"', "sans-serif"],
+              body: ['"Open Sans"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-cola-dark text-white font-body">
+    <!-- Navbar Section -->
+    <nav class="bg-black py-4 px-6 border-b border-cola-red">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <!-- Logo/Left Side -->
+          <div class="flex items-center">
+            <a href="/" class="text-2xl font-display text-cola-red"
+              >Do and Drinks</a
+            >
+          </div>
+
+          <!-- Center Navigation Links -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="/about"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >About</a
+            >
+            <a
+              href="/menu"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Menu</a
+            >
+
+            <a
+              href="/collaboration"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Collaboration</a
+            >
+
+            <a
+              href="/contact"
+              class="text-cola-red px-3 py-2 text-sm font-medium border-b-2 border-cola-red"
+              >Contact Us</a
+            >
+          </div>
+
+          <!-- Right Side Elements -->
+          <div class="flex items-center space-x-4">
+            <!-- Download App Button -->
+            <a
+              href="/download"
+              class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Download App
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Contact Us Section -->
+    <div class="min-h-screen flex flex-col items-center justify-center mt-12">
+      <h1 class="text-5xl font-display text-white mb-6">
+        Contact <span class="text-red-700">Us</span>
+      </h1>
+      <div class="h-1 bg-cola-gold w-32 mx-auto mb-8"></div>
+      <form
+        action="/submit-contact-form"
+        method="POST"
+        class="bg-gradient-to-b from-cola-red to-cola-dark p-8 rounded-lg border border-cola-gold w-full max-w-lg mb-8"
+      >
+        <div class="mb-6">
+          <label class="block text-lg font-display text-white mb-2" for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="w-full px-4 py-2 bg-black border border-cola-gold rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cola-gold"
+            placeholder="Your full name"
+            required
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block text-lg font-display text-white mb-2" for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="w-full px-4 py-2 bg-black border border-cola-gold rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cola-gold"
+            placeholder="Your email address"
+            required
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block text-lg font-display text-white mb-2" for="message">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            class="w-full px-4 py-2 bg-black border border-cola-gold rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cola-gold"
+            placeholder="Your message here..."
+            required
+          ></textarea>
+        </div>
+        <div class="text-center">
+          <button
+            type="submit"
+            class="px-8 py-3 bg-cola-gold text-black font-display rounded-lg hover:bg-white transition duration-300"
+          >
+            Send Message
+          </button>
+        </div>
+      </form>
+      <!-- Google Map Section -->
+      <div class="w-full max-w-4xl h-96 rounded-lg border border-cola-gold overflow-hidden">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.3044930953224!2d107.62777107410747!3d-6.97335726828058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9adf177bf8d%3A0x437398556f9fa03!2sUniversitas%20Telkom!5e0!3m2!1sid!2sid!4v1746716264368!5m2!1sid!2sid"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </body>
+</html>

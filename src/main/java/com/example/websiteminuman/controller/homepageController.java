@@ -18,9 +18,9 @@ public class homepageController {
     public String showMenu() {
         return "menu";
     }
-    @GetMapping("/contact")
+    @GetMapping("/tes")
     public String showContact() {
-        return "contact";
+        return "tes";
     }
     
 }

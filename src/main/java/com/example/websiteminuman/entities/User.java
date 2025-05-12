@@ -1,5 +1,8 @@
 package com.example.websiteminuman.entities;
 
+import jakarta.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class User {
     private String password;
 

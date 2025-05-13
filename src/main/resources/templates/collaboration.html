@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Do and Drinks - Collaboration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/main.css}" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-cola-dark text-white font-body">
+    <nav class="bg-black py-4 px-6 border-b border-cola-red">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <!-- Logo/Left Side -->
+          <div class="flex items-center">
+            <a href="/" class="text-2xl font-display text-cola-red">Do and Drinks</a>
+          </div>
+
+          <!-- Center Navigation Links -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="/about"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >About</a
+            >
+            <a
+              href="/menu"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Menu</a
+            >
+            <a
+              href="/collaboration"
+              class="text-cola-red px-3 py-2 text-sm font-medium border-b-2 border-cola-red"
+              >Collaboration</a
+            >
+            <a
+              href="/contact"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Contact Us</a
+            >
+          </div>
+
+          <!-- Right Side Elements -->
+          <div class="flex items-center space-x-4">
+            <a
+              href="/download"
+              class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Download App
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="min-h-screen">
+      <!-- Hero Section -->
+      <div class="bg-cola-gradient py-20">
+        <div class="max-w-4xl mx-auto text-center px-4">
+          <h1 class="text-5xl font-display text-white mb-6">
+            Collaboration with <span class="text-red-700 font-bold">Do and Drinks</span>
+          </h1>
+          <div class="h-1 bg-cola-gold w-32 mx-auto mb-8"></div>
+          <p class="text-xl mb-8">
+            Let’s create something amazing together. Join our collaboration program today!
+          </p>
+        </div>
+      </div>
+
+      <!-- Benefits Section -->
+      <div class="max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-display text-cola-red mb-8 text-center">
+          Kenapa Berkolaborasi Dengan Kami?
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+          <div class="bg-cola-dark border border-cola-gold p-6 rounded-lg">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1387/1387554.png"
+              alt="Increased Revenue"
+              class="w-20 h-20 mx-auto mb-4"
+            />
+            <h3 class="text-xl font-bold text-white">Peningkatan Pendapatan</h3>
+            <p class="text-gray-300">
+              Bermitra dengan kami dapat membantu meningkatkan penjualan Anda dan memperluas basis pelanggan Anda
+            </p>
+          </div>
+          <div class="bg-cola-dark border border-cola-gold p-6 rounded-lg">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2917/2917296.png"
+              alt="Brand Visibility"
+              class="w-20 h-20 mx-auto mb-4"
+            />
+            <h3 class="text-xl font-bold text-white">Visibilitas Merek</h3>
+            <p class="text-gray-300">
+              Ditampilkan dalam kampanye kami dan jangkau audiens yang lebih luas.
+            </p>
+          </div>
+          <div class="bg-cola-dark border border-cola-gold p-6 rounded-lg">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2921/2921822.png"
+              alt="Innovation"
+              class="w-20 h-20 mx-auto mb-4"
+            />
+            <h3 class="text-xl font-bold text-white">Inovasi</h3>
+            <p class="text-gray-300">
+              Berkolaborasi pada produk dan ide baru untuk membuat pelanggan tetap bersemangat.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call to Action Section -->
+      <div class="bg-cola-dark py-16">
+        <div class="max-w-4xl mx-auto text-center px-4">
+          <h2 class="text-3xl font-display text-cola-red mb-6">
+            Siap Berkolaborasi?
+          </h2>
+          <p class="text-gray-300 mb-8">
+            Isi formulir di bawah ini, dan tim kami akan segera menghubungi Anda.
+          </p>
+          <form action="/collaboration/submit" method="post" class="space-y-4">
+            <input
+              type="text"
+              name="name"
+              placeholder="Your Name"
+              class="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cola-red"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Your Email"
+              class="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cola-red"
+              required
+            />
+            <textarea
+              name="message"
+              placeholder="Tell us about your idea"
+              rows="4"
+              class="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-cola-red"
+              required
+            ></textarea>
+            <button
+              type="submit"
+              class="bg-cola-red text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

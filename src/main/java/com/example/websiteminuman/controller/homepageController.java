@@ -22,5 +22,9 @@ public class homepageController {
     public String showContact() {
         return "contact";
     }
+    @GetMapping("/collaboration")
+    public String showCollaboration() {
+        return "collaboration";
+    }
     
 }

@@ -4,11 +4,16 @@ import java.util.ArrayList;
 
 public class Customer extends User {
     private String email;
-    protected ArrayList<Minuman> M; 
+    protected ArrayList<Minuman> M;
+    protected ArrayList<History> H;
+    protected ArrayList<Payment> P;
 
     public Customer(String password, String email) {
         super(password);
         this.email = email;
+        this.M = new ArrayList<>();
+        this.H = new ArrayList<>();
+        this.P = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -17,6 +22,20 @@ public class Customer extends User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void AddToCart(Minuman minuman) {
+        if (minuman != null) {
+            M.add(minuman);
+            System.out.println("Minuman " + minuman.getNama() + " ditambahkan ke keranjang.");
+        } else {
+            System.out.println("Minuman tidak boleh null.");
+        }
+    }
+
+    public void OrderMinuman(String nama, String jenis, String ukuran, int harga) {
+        Minuman minumanBaru = new Minuman(nama, jenis, ukuran, harga);
+        AddToCart(minumanBaru);
     }
 
     @Override

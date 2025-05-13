@@ -2,7 +2,16 @@ package com.example.websiteminuman.entities;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Customer extends User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String email;
     protected ArrayList<Minuman> M;
     protected ArrayList<History> H;

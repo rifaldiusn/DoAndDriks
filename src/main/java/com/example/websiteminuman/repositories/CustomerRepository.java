@@ -1,12 +1,13 @@
 package com.example.websiteminuman.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.websiteminuman.entities.Admin;
+import org.springframework.stereotype.Repository;
+import com.example.websiteminuman.entities.Customer;
 import java.util.List;
 
-
-public interface AdminRepository extends JpaRepository<Admin, Long> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Custom query methods can be defined here if needed
     // For example, findByUsername(String username);
-    List<Admin> findByUsername(String username);
+    List<Customer> findByEmail(String email);
+
 }

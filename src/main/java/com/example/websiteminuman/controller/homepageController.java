@@ -23,4 +23,8 @@ public class homepageController {
         return "contact";
     }
     
+    @GetMapping("/login")
+    public String showLogin() {
+        return "loginTest";
+    }
 }

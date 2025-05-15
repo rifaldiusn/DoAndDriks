@@ -8,17 +8,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Customer extends User {
+public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+    private String password;
     protected ArrayList<Minuman> M;
     protected ArrayList<History> H;
     protected ArrayList<Payment> P;
 
+    public Customer() {
+    }    
+    
     public Customer(String password, String email) {
-        super(password);
+        this.password = password;
         this.email = email;
         this.M = new ArrayList<>();
         this.H = new ArrayList<>();
@@ -31,6 +35,14 @@ public class Customer extends User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void AddToCart(Minuman minuman) {
@@ -47,17 +59,17 @@ public class Customer extends User {
         AddToCart(minumanBaru);
     }
 
-    @Override
-    public void login() {
-        if (email == null || email.isEmpty()) {
-            System.out.println("Email tidak boleh kosongs.");
-            return;
-        } else if (getPassword() == null || getPassword().isEmpty()) {
-            System.out.println("Password tidak boleh kosong.");
-            return;
-        } else {
-            System.out.println("Login berhasil.");
-        }
-        System.out.println("Customer " + email + " logged in.");
-    }
+    // @Override
+    // public void login() {
+    //     if (email == null || email.isEmpty()) {
+    //         System.out.println("Email tidak boleh kosongs.");
+    //         return;
+    //     } else if (getPassword() == null || getPassword().isEmpty()) {
+    //         System.out.println("Password tidak boleh kosong.");
+    //         return;
+    //     } else {
+    //         System.out.println("Login berhasil.");
+    //     }
+    //     System.out.println("Customer " + email + " logged in.");
+    // }
 }

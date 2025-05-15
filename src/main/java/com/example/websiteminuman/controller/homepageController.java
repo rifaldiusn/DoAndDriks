@@ -26,11 +26,7 @@ public class homepageController {
     public String showCollaboration() {
         return "collaboration";
     }
-    @GetMapping("/download")
-    public String showDownload() {
-        return "download";
-    }
-
+    
     @GetMapping("/login")
     public String showLogin() {
         return "loginTest";

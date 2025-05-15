@@ -10,6 +10,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class AdminDto {
-    private Long id;
     private String username;
+    private String password;
 }

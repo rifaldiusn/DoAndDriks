@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Do and Drinks - Download App</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/main.css}" rel="stylesheet" />
+    <body class="bg-black text-white font-body">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .phone-mockup {
+        width: 300px;
+        height: 600px;
+        background: url("/src/main/resources/static/images/phone_035.jpg") repeat center center;
+        background-size: contain;
+        position: relative;
+        margin: 0 auto;
+        box-shadow: 0px 4px 10px rgba(255, 0, 81, 0.735);
+        border-radius: 30px;
+      }
+
+      .phone-mockup video {
+        position: absolute;
+        top: 0; /* Adjust to align inside the frame */
+        left: 0; /* Adjust to align inside the frame */
+        width: 100%; /* Adjust to fit inside the frame */
+        height: 100%; /* Adjust to fit inside the frame */
+        object-fit: cover;
+        border-radius: 30px;
+      }
+
+      /* Perbesar Tombol */
+      .store-button {
+        height: 80px; /* Tinggi tombol */
+        width: auto; /* Lebar proporsional */
+        transition: transform 0.3s ease; /* Animasi saat di-hover */
+        cursor: pointer; /* Ubah kursor saat hover */
+      }
+
+      .store-button:hover {
+        transform: scale(1.1); /* Perbesar tombol saat di-hover */
+      }
+    </style>
+  </head>
+
+  <body class="bg-cola-dark text-white font-body">
+    <nav class="bg-black py-4 px-6 border-b border-cola-red">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <!-- Logo/Left Side -->
+          <div class="flex items-center">
+            <a href="/" class="text-2xl font-display text-cola-red">Do and Drinks</a>
+          </div>
+
+          <!-- Center Navigation Links -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="/about"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >About</a
+            >
+            <a
+              href="/menu"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Menu</a
+            >
+            <a
+              href="/collaboration"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Collaboration</a
+            >
+            <a
+              href="/contact"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
+              >Contact Us</a
+            >
+          </div>
+
+          <!-- Right Side Elements -->
+          <div class="flex items-center space-x-4">
+            <a
+              href="/download"
+              class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Download App
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="min-h-screen">
+      <!-- App Download Section -->
+      <div class="max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
+        <!-- Phone Mockup with Video -->
+        <div class="text-center">
+          <div class="phone-mockup">
+            <video autoplay loop muted playsinline>
+              <source src="https://videos.pexels.com/video-files/2909914/2909914-uhd_2732_1440_24fps.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+        <!-- App Description -->
+        <div>
+          <h1 class="text-4xl font-display text-cola-red mb-6">
+            Do and Drinks App
+          </h1>
+          <p class="text-lg text-gray-300 mb-6">
+            Discover exclusive deals, skip the line, and enjoy rewards with the Do and Drinks app. Here's how:
+          </p>
+          <ul class="list-disc list-inside text-gray-300 space-y-2 mb-6">
+            <li>Order your favorite drinks for pickup or delivery.</li>
+            <li>Earn points and redeem rewards with every purchase.</li>
+            <li>Access exclusive membership benefits and promos.</li>
+            <li>Stay updated on new products and events.</li>
+          </ul>
+          <p class="text-gray-300 mb-6">
+            Convenience and rewards, all in one app. Download now!
+          </p>
+          <div class="flex space-x-4">
+            <img
+              src="https://create.org.au/wp-content/uploads/2019/08/App-Store-Badges.png"
+              alt="Download on App Store"
+              class="store-button"
+            />
+            
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

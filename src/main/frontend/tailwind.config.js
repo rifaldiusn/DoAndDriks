@@ -16,6 +16,10 @@ module.exports = {
         display: ['"Bebas Neue"', "sans-serif"],
         body: ['"Open Sans"', "sans-serif"],
       },
+      spacing: {
+        '30': '7.5rem',
+        '40': '10rem',
+      },
     },
   },
   injectGlobalStyles: {

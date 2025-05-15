@@ -4,6 +4,10 @@
     <title>Do and Drinks - Collaboration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/main.css}" rel="stylesheet" />
+
+  </head>
+
+  <body class="bg-black text-white font-body">
     <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wght@400;600&display=swap"
       rel="stylesheet"
@@ -57,23 +61,11 @@
     </nav>
 
     <main class="min-h-screen">
-      <!-- Hero Section -->
-      <div class="bg-cola-gradient py-20">
-        <div class="max-w-4xl mx-auto text-center px-4">
-          <h1 class="text-5xl font-display text-white mb-6">
-            Collaboration with <span class="text-red-700 font-bold">Do and Drinks</span>
-          </h1>
-          <div class="h-1 bg-cola-gold w-32 mx-auto mb-8"></div>
-          <p class="text-xl mb-8">
-            Let’s create something amazing together. Join our collaboration program today!
-          </p>
-        </div>
-      </div>
 
       <!-- Benefits Section -->
       <div class="max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-display text-cola-red mb-8 text-center">
-          Kenapa Berkolaborasi Dengan Kami?
+          Why Collaborate With Us?
         </h2>
         <div class="grid md:grid-cols-3 gap-8 text-center">
           <div class="bg-cola-dark border border-cola-gold p-6 rounded-lg">
@@ -82,9 +74,9 @@
               alt="Increased Revenue"
               class="w-20 h-20 mx-auto mb-4"
             />
-            <h3 class="text-xl font-bold text-white">Peningkatan Pendapatan</h3>
+            <h3 class="text-xl font-bold text-white">Increase in Revenue</h3>
             <p class="text-gray-300">
-              Bermitra dengan kami dapat membantu meningkatkan penjualan Anda dan memperluas basis pelanggan Anda
+              Partnering with us can help boost your sales and expand your customer base.
             </p>
           </div>
           <div class="bg-cola-dark border border-cola-gold p-6 rounded-lg">
@@ -93,9 +85,9 @@
               alt="Brand Visibility"
               class="w-20 h-20 mx-auto mb-4"
             />
-            <h3 class="text-xl font-bold text-white">Visibilitas Merek</h3>
+            <h3 class="text-xl font-bold text-white">Brand Visibility</h3>
             <p class="text-gray-300">
-              Ditampilkan dalam kampanye kami dan jangkau audiens yang lebih luas.
+              Displayed in our campaign and reach a wider audience.
             </p>
           </div>
           <div class="bg-cola-dark border border-cola-gold p-6 rounded-lg">
@@ -104,22 +96,22 @@
               alt="Innovation"
               class="w-20 h-20 mx-auto mb-4"
             />
-            <h3 class="text-xl font-bold text-white">Inovasi</h3>
+            <h3 class="text-xl font-bold text-white">Innovation</h3>
             <p class="text-gray-300">
-              Berkolaborasi pada produk dan ide baru untuk membuat pelanggan tetap bersemangat.
+              Collaborating on new products and ideas to keep customers excited.
             </p>
           </div>
         </div>
       </div>
 
       <!-- Call to Action Section -->
-      <div class="bg-cola-dark py-16">
+      <div class="bg-black py-16">
         <div class="max-w-4xl mx-auto text-center px-4">
           <h2 class="text-3xl font-display text-cola-red mb-6">
-            Siap Berkolaborasi?
+            Ready to collaborate?
           </h2>
           <p class="text-gray-300 mb-8">
-            Isi formulir di bawah ini, dan tim kami akan segera menghubungi Anda.
+            Fill out the form below, and our team will contact you shortly.
           </p>
           <form action="/collaboration/submit" method="post" class="space-y-4">
             <input

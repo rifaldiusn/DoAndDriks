@@ -27,8 +27,13 @@ public class homepageController {
         return "collaboration";
     }
     
-    @GetMapping("/admin")
+    @GetMapping("/admin/dashboard")
     public String showDashboard() {
         return "dashboardAdmin";
+    }
+
+    @GetMapping("/loginTest")
+    public String showLoginAdmin() {
+        return "loginTest";
     }
 }

@@ -15,13 +15,25 @@ public class Minuman {
     private String ukuran;
     private int harga;
     
-    public Minuman(String nama, String jenis, String ukuran, int harga) {
+    public Minuman(Long id, String nama, String jenis, String ukuran, int harga) {
+        this.id = id;
         this.jenis = jenis;
         this.nama = nama;
         this.harga = harga;
         this.ukuran = ukuran;
     }
 
+    public Minuman() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getJenis() {
         return jenis;
     }

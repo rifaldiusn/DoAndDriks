@@ -54,10 +54,10 @@ public class Customer{
         }
     }
 
-    public void OrderMinuman(String nama, String jenis, String ukuran, int harga) {
-        Minuman minumanBaru = new Minuman(nama, jenis, ukuran, harga);
-        AddToCart(minumanBaru);
-    }
+    // public void OrderMinuman(String nama, String jenis, String ukuran, int harga) {
+    //     Minuman minumanBaru = new Minuman(nama, jenis, ukuran, harga);
+    //     AddToCart(minumanBaru);
+    // }
 
     // @Override
     // public void login() {

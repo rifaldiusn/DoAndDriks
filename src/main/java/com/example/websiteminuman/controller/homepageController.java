@@ -31,15 +31,13 @@ public class homepageController {
         return "download";
     }
     
-    
-    @GetMapping("/login")
-    public String showLogin() {
-        return "loginTest";
-    }
-    @GetMapping("/dashboardAdmin")
-    public String showDashboardAdmin() {
+    @GetMapping("/admin/dashboard")
+    public String showDashboard() {
         return "dashboardAdmin";
     }
 
-
+    @GetMapping("/loginTest")
+    public String showLoginAdmin() {
+        return "loginTest";
+    }
 }

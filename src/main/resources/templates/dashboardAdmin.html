@@ -1,17 +1,141 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link th:href="@{/main.css}" rel="stylesheet" />
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9fafb; /* Warna latar belakang yang kalem */
+      }
+      .dashboard-bg {
+        background: #ffffff; /* Warna putih elegan untuk komponen utama */
+      }
+      .card {
+        background-color: #fefefe; /* Warna pastel terang untuk komponen */
+        border: 1px solid #e5e7eb;
+      }
+      .text-primary {
+        color: #4b5563; /* Warna abu-abu gelap untuk teks utama */
+      }
+      .text-highlight {
+        color: #2563eb; /* Warna biru lembut untuk elemen penting */
+      }
+    </style>
   </head>
   <body>
-    <div class="text-black text bold bg-red-800 item center">tes</div>
-    <div class="grid-cols-2 gap-4 flex justify-center">
-      <div class="bg-red-800">tes</div>
-      <div>tes</div>
-      <div>tes</div>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md py-4 px-6">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="text-2xl font-bold text-primary">Admin Dashboard</a>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="text-center py-8">
+      <h1 class="text-3xl font-bold text-primary">Welcome to the Admin Dashboard</h1>
+      <p class="text-gray-500">Manage your data efficiently and effectively</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Total Pendapatan -->
+        <div class="card p-6 rounded-lg shadow-sm">
+          <h2 class="text-xl font-semibold text-primary mb-4">Pendapatan Total</h2>
+          <p class="text-3xl font-bold text-highlight">Rp 10,000,000</p>
+        </div>
+
+        <!-- Minuman Terpopuler -->
+        <div class="card p-6 rounded-lg shadow-sm">
+          <h2 class="text-xl font-semibold text-primary mb-4">Minuman Terpopuler</h2>
+          <ul class="list-disc pl-6 text-gray-600">
+            <li>Latte - 150 Pesanan</li>
+            <li>Espresso - 120 Pesanan</li>
+            <li>Matcha Latte - 100 Pesanan</li>
+          </ul>
+        </div>
+
+        <!-- Total Pesanan -->
+        <div class="card p-6 rounded-lg shadow-sm">
+          <h2 class="text-xl font-semibold text-primary mb-4">Total Pesanan</h2>
+          <p class="text-3xl font-bold text-green-600">350 Pesanan</p>
+        </div>
+      </div>
+
+      <!-- Grafik Penjualan -->
+      <div class="card p-6 rounded-lg shadow-sm mt-6">
+        <h2 class="text-xl font-semibold text-primary mb-4">Grafik Penjualan</h2>
+        <canvas id="salesChart"></canvas>
+      </div>
+
+      <!-- Tabel Detail Pesanan -->
+      <div class="card p-6 rounded-lg shadow-sm mt-6">
+        <h2 class="text-xl font-semibold text-primary mb-4">Detail Pesanan</h2>
+        <table class="min-w-full table-auto border-collapse border border-gray-300 text-gray-600">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-4 py-2">No</th>
+              <th class="border border-gray-300 px-4 py-2">Nama Minuman</th>
+              <th class="border border-gray-300 px-4 py-2">Jumlah</th>
+              <th class="border border-gray-300 px-4 py-2">Harga</th>
+              <th class="border border-gray-300 px-4 py-2">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 text-center">1</td>
+              <td class="border border-gray-300 px-4 py-2">Latte</td>
+              <td class="border border-gray-300 px-4 py-2 text-center">150</td>
+              <td class="border border-gray-300 px-4 py-2 text-right">Rp 30,000</td>
+              <td class="border border-gray-300 px-4 py-2 text-right">Rp 4,500,000</td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 text-center">2</td>
+              <td class="border border-gray-300 px-4 py-2">Espresso</td>
+              <td class="border border-gray-300 px-4 py-2 text-center">120</td>
+              <td class="border border-gray-300 px-4 py-2 text-right">Rp 20,000</td>
+              <td class="border border-gray-300 px-4 py-2 text-right">Rp 2,400,000</td>
+            </tr>
+            <tr>
+              <td class="border border-gray-300 px-4 py-2 text-center">3</td>
+              <td class="border border-gray-300 px-4 py-2">Matcha Latte</td>
+              <td class="border border-gray-300 px-4 py-2 text-center">100</td>
+              <td class="border border-gray-300 px-4 py-2 text-right">Rp 25,000</td>
+              <td class="border border-gray-300 px-4 py-2 text-right">Rp 2,500,000</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <!-- Chart.js Script -->
+    <script>
+      const ctx = document.getElementById("salesChart").getContext("2d");
+      const salesChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Latte", "Espresso", "Matcha Latte"],
+          datasets: [
+            {
+              label: "Jumlah Pesanan",
+              data: [150, 120, 100],
+              backgroundColor: ["#93c5fd", "#6ee7b7", "#fbbf24"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "top",
+            },
+          },
+        },
+      });
+    </script>
   </body>
 </html>

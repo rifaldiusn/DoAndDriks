@@ -59,4 +59,8 @@ public class homepageController {
     public String kelolaMenu() {
         return "kelola-menu"; // kelola-menu.html
     }
+    @GetMapping("/logincust")
+    public String login() {
+        return "logincust"; // 
+    }
 }

@@ -31,7 +31,7 @@ public class homepageController {
         return "download";
     }
     
-    @GetMapping("/admin/dashboard")
+    @GetMapping("/dashboardAdmin")
     public String showDashboard() {
         return "dashboardAdmin";
     }
@@ -39,5 +39,24 @@ public class homepageController {
     @GetMapping("/loginTest")
     public String showLoginAdmin() {
         return "loginTest";
+    }
+     @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard"; // dashboard.html
+    }
+
+    @GetMapping("/tambah")
+    public String tambahMinuman() {
+        return "tambah-minuman"; // tambah-minuman.html
+    }
+
+    @GetMapping("/laporan")
+    public String laporanPesanan() {
+        return "laporan"; // laporan.html
+    }
+
+    @GetMapping("/kelola")
+    public String kelolaMenu() {
+        return "kelola-menu"; // kelola-menu.html
     }
 }

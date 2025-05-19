@@ -10,7 +10,7 @@
         <div class="flex justify-between h-16">
           <!-- Logo/Left Side -->
           <div class="flex items-center">
-            <a th:href="@{/}" class="text-3xl font-display text-cola-red"
+            <a th:href="@{/}" class="text-2xl font-display text-cola-red"
               >Do and Drinks</a
             >
           </div>
@@ -18,23 +18,25 @@
           <!-- Center Navigation Links -->
           <div class="hidden md:flex items-center space-x-8">
             <a
-              th:href="@{/about}"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              href="/about"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium border-b-2 border-cola-red"
               >About</a
             >
             <a
-              th:href="@{/menu}"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              href="/menu"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
               >Menu</a
             >
+
             <a
-              th:href="@{/collaboration}"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              href="/collaboration"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
               >Collaboration</a
             >
+
             <a
-              th:href="@{/contact}"
-              class="text-gray-300 hover:text-cola-red px-3 py-2 text-lg font-medium"
+              href="/contact"
+              class="text-gray-300 hover:text-cola-red px-3 py-2 text-sm font-medium"
               >Contact Us</a
             >
           </div>

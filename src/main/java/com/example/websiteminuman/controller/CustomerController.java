@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import com.example.websiteminuman.repositories.CustomerRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/auth/customer")
@@ -46,4 +48,30 @@ public class CustomerController {
             .toList();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
+        var customer = customerRepository.findById(id).orElse(null);
+        if (customer == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(customerMapper.toDto(customer));
+    }
+    
+    @GetMapping("/sort/{field}")
+    public Iterable<CustomerDto> getAllCustomersSorted(@PathVariable String field) {
+        return customerRepository.findAll(Sort.by(field))
+            .stream()
+            .map(customerMapper::toDto)
+            .toList();
+    }
+
+    @PostMapping("/coba/login")
+    public ResponseEntity<Customer> loginCustomer(@RequestParam String email, @RequestParam String password) {
+        try{
+            var customer = customerService.login2(email, password);
+            return ResponseEntity.ok(customer);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(null);
+        }
+    }
 }

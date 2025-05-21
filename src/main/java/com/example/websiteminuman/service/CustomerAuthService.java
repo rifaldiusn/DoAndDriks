@@ -22,15 +22,22 @@ public class CustomerAuthService {
         var customer = customerRepo.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Email Tidak Ditemukan"));
 
-        //if (!customer.getPassword().equals(dto.getPassword())) {
-           // throw new BadCredentialsException("Invalid credentials");
-       // }
+        if (!customer.getPassword().equals(dto.getPassword())) {
+           throw new BadCredentialsException("Invalid credentials");
+        }
 
         return customer;
     }
 
-    public DelUpMinuman delUpMinuman(Long id) {
-        var minuman = minumanRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException("Minuman Tidak Ditemukan"));
-        return new DelUpMinuman(minuman.getId());
+    public Customer login2(String email, String password) {
+        var customer = customerRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email Tidak Ditemukan"));
+
+        if (!customer.getPassword().equals(password)) {
+            throw new BadCredentialsException("Invalid credentials");
+        }
+
+        return customer;
+    }
 }
-}
+

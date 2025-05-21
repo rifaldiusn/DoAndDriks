@@ -36,9 +36,9 @@ public class homepageController {
         return "dashboardAdmin";
     }
 
-    @GetMapping("/loginTest")
+    @GetMapping("/loginAdmin")
     public String showLoginAdmin() {
-        return "loginTest";
+        return "loginAdmin";
     }
      @GetMapping("/dashboard")
     public String dashboard() {

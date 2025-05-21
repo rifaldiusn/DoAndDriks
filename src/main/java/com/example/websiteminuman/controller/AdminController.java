@@ -17,10 +17,13 @@ import com.example.websiteminuman.repositories.AdminRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.AdminAuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
@@ -66,8 +69,15 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Admin> loginAdmin(@RequestBody AdminDto dto) {
-        return ResponseEntity.ok(adminService.login(dto));
+    public ResponseEntity<Admin> loginAdmin(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
+        try {
+            AdminDto dto = new AdminDto(username, password);
+            dto.setUsername(username);
+            dto.setPassword(password);
+            return ResponseEntity.ok(adminService.login(dto));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(null);
+        }
     }
 
     @GetMapping("/minuman/get")

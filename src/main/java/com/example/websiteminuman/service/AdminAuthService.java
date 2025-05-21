@@ -12,7 +12,7 @@ import com.example.websiteminuman.dto.DelUpMinuman;
 import com.example.websiteminuman.entities.Admin;
 import com.example.websiteminuman.repositories.AdminRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
-import com.example.websiteminuman.security.JwtUtil;
+// import com.example.websiteminuman.security.JwtUtil;
 
 @Service
 public class AdminAuthService {
@@ -21,22 +21,22 @@ public class AdminAuthService {
     private AdminRepository adminRepo;
     private MinumanRepository minumanRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    // @Autowired
+    // private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    // @Autowired
+    // private JwtUtil jwtUtil;
 
-    public AuthResponseDto login(AdminDto dto) {
+    public Admin login(AdminDto dto) {
         Admin admin = adminRepo.findByUsername(dto.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username Tidak Ditemukan"));
 
-        if (!passwordEncoder.matches(dto.getPassword(), admin.getPassword())) {
-            throw new BadCredentialsException("Invalid credentials");
-        }
+        // if (!passwordEncoder.matches(dto.getPassword(), admin.getPassword())) {
+        //     throw new BadCredentialsException("Invalid credentials");
+        // }
 
-        String token = jwtUtil.generateToken(admin.getUsername());
-        return new AuthResponseDto(token);
+        // String token = jwtUtil.generateToken(admin.getUsername());
+        return admin;
     }
 
     public DelUpMinuman delUpMinuman(Long id) {

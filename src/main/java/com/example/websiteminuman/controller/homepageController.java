@@ -36,9 +36,9 @@ public class homepageController {
         return "dashboardAdmin";
     }
 
-    @GetMapping("/loginTest")
+    @GetMapping("/loginAdmin")
     public String showLoginAdmin() {
-        return "loginTest";
+        return "loginAdmin";
     }
      @GetMapping("/dashboard")
     public String dashboard() {
@@ -62,5 +62,9 @@ public class homepageController {
     @GetMapping("/logincust")
     public String login() {
         return "logincust"; // 
+    }
+    @GetMapping("/registerCustomer")
+    public String register() {
+        return "registerCustomer"; // 
     }
 }

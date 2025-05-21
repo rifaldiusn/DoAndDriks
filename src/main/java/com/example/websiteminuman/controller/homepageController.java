@@ -63,4 +63,8 @@ public class homepageController {
     public String login() {
         return "logincust"; // 
     }
+    @GetMapping("/registerCustomer")
+    public String register() {
+        return "registerCustomer"; // 
+    }
 }

@@ -17,6 +17,8 @@ import com.example.websiteminuman.repositories.CustomerRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,7 +68,7 @@ public class CustomerController {
     }
 
     @PostMapping("/coba/login")
-    public ResponseEntity<Customer> loginCustomer(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<Customer> loginCustomer(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
         try{
             var customer = customerService.login2(email, password);
             return ResponseEntity.ok(customer);

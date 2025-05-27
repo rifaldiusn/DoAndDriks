@@ -13,7 +13,8 @@
       .phone-mockup {
         width: 300px;
         height: 600px;
-        background-image: url("/images/phone_035.jpg") center center / contain no-repeat;
+        background-position: center;
+        background-repeat: no-repeat;
         background-size: contain;
         position: relative;
         margin: 0 auto;
@@ -99,7 +100,7 @@
         <!-- Phone Mockup with Video -->
         <div class="text-center">
           <div class="phone-mockup">
-            <video autoplay loop muted playsinline>
+            <video autoplay loop muted playsinline >
               <source src="https://videos.pexels.com/video-files/2909914/2909914-uhd_2732_1440_24fps.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -132,6 +133,24 @@
           </div>
         </div>
       </div>
+
+      <!-- Footer -->
+    <footer class="bg-black py-12 px-4 border-t border-cola-red">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col items-center space-y-4">
+        <!-- Info Layanan -->
+        <div class="text-gray-400 text-sm">
+          <span>Informasi Layanan: <a href="tel:+6281234567890" class="text-cola-red hover:underline">+62 812-3456-7890</a></span>
+        </div>
+        <!-- Copyright -->
+        <div class="text-center">
+          <p class="text-gray-400">
+            &copy; 2023 DO AND DRINKS. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </div>
+    </footer>
     </main>
   </body>
 </html>

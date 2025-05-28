@@ -48,22 +48,25 @@
           <h3 class="text-xl font-bold mb-4">Tambah Minuman</h3>
           <form
             th:action="@{/auth/admin/minuman/create}"
+            id="minumanForm"
             method="post"
             class="space-y-4"
           >
             <input
               type="text"
+              id="nama"
               name="nama"
               placeholder="Nama Minuman"
               class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
             />
             <input
               type="number"
+              id="harga"
               name="harga"
               placeholder="Harga"
               class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
             />
-            <select name="jenis" placeholder="Jenis Minuman" class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white">
+            <select name="jenis" id="jenis" placeholder="Jenis Minuman" class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white">
               <option value="">Pilih Jenis Minuman</option>
               <option value="jus">Juice</option>
               <option value="kopi">Coffee</option>
@@ -71,6 +74,7 @@
             </select>
             <textarea
               name="deskripsi"
+              id="deskripsi"
               placeholder="Deskripsi"
               class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
             ></textarea>
@@ -121,26 +125,12 @@
               <tr>
                 <th class="px-4 py-2">Nama</th>
                 <th class="px-4 py-2">Harga</th>
+                <th class="px-4 py-2">Jenis</th>
+                <th class="px-4 py-2">Deskripsi</th>
                 <th class="px-4 py-2">Aksi</th>
               </tr>
             </thead>
-            <tbody>
-              <tr th:each="minuman : ${minumanList}" class="hover:bg-[#2a2a2a]">
-                <td class="px-4 py-2" th:text="${minuman.nama}">Latte</td>
-                <td class="px-4 py-2" th:text="${minuman.harga}">Rp 30.000</td>
-                <td class="px-4 py-2 space-x-2">
-                  <a
-                    th:href="@{'/admin/minuman/edit/' + ${minuman.id}}"
-                    class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black"
-                    >Edit</a
-                  >
-                  <a
-                    th:href="@{'/admin/minuman/hapus/' + ${minuman.id}}"
-                    class="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
-                    >Hapus</a
-                  >
-                </td>
-              </tr>
+            <tbody id="minumanBody">
             </tbody>
           </table>
         </section>
@@ -148,18 +138,61 @@
     </div>
   </body>
   <script>
-    document.querySelector('form').addEventListener('submit', async function(e) {
+  document.getElementById('minumanForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const nama = document.getElementById('nama').value;
-    const harga = document.getElementById('harga').value;
+    const harga = parseInt(document.getElementById('harga').value);
     const jenis = document.getElementById('jenis').value;
     const deskripsi = document.getElementById('deskripsi').value;
+    const adminId = parseInt(document.getElementById('adminId').value);
+
     const response = await fetch('/auth/admin/minuman/create', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: new URLSearchParams({nama, harga, jenis, deskripsi})
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nama, harga, jenis, deskripsi, adminId })
     });
-  }); 
+
+    if (response.ok) {
+      alert('Minuman berhasil ditambahkan!');
+      // bisa redirect atau reset form di sini
+    } else {
+      alert('Gagal menambahkan minuman.');
+    }
+  });
+  
+  async function loadMinuman() {
+    try {
+      const response = await fetch('/auth/admin/minuman/get');
+      if (!response.ok) throw new Error('Gagal mengambil data');
+      const data = await response.json();
+
+      const tbody = document.getElementById('minumanBody');
+      let rows = '';
+
+      data.forEach(minuman => {
+        rows += `
+          <tr class="hover:bg-[#2a2a2a]">
+            <td class="px-4 py-2">${minuman.nama}</td>
+            <td class="px-4 py-2">Rp ${minuman.harga}</td>
+            <td class="px-4 py-2">${minuman.jenis}</td>
+            <td class="px-4 py-2">${minuman.deskripsi}</td>
+            <td class="px-4 py-2 space-x-2">
+              <a href="/admin/minuman/edit/${minuman.id}" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</a>
+              <a href="/admin/minuman/hapus/${minuman.id}" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Hapus</a>
+            </td>
+          </tr>
+        `;
+      });
+
+        tbody.innerHTML = rows;
+      } catch (err) {
+        console.error('Gagal memuat data minuman:', err);
+      }
+  }
+    // Panggil fungsi saat halaman selesai dimuat
+    window.addEventListener('DOMContentLoaded', loadMinuman);
   </script>
 </html>

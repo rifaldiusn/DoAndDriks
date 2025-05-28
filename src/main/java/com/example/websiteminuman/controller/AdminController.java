@@ -4,13 +4,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.websiteminuman.dto.AdminDto;
 import com.example.websiteminuman.dto.AuthResponseDto;
+import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
 // import com.example.websiteminuman.entities.Admin;
 import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.mapper.AdminMapper;
+import com.example.websiteminuman.mapper.MinumanMapper;
+
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.websiteminuman.repositories.AdminRepository;
@@ -32,11 +40,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/auth/admin")
 public class AdminController {
     private final AdminMapper adminMapper;
+    private final MinumanMapper minumanMapper;
     private final AdminRepository adminRepository;
     private final MinumanRepository minumanRepository;
     private final AdminAuthService adminService;
 
-    public AdminController(AdminRepository adminRepository, AdminMapper adminMapper, MinumanRepository minumanRepository, AdminAuthService adminService) {
+    public AdminController(AdminRepository adminRepository, AdminMapper adminMapper, MinumanRepository minumanRepository, AdminAuthService adminService, MinumanMapper minumanMapper) {
+        this.minumanMapper = minumanMapper;
         this.minumanRepository = minumanRepository;
         this.adminMapper = adminMapper;
         this.adminRepository = adminRepository;
@@ -69,11 +79,12 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Admin> loginAdmin(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
+    public ResponseEntity<Admin> loginAdmin(@RequestBody AdminDto adminDto) {
         try {
-            AdminDto dto = new AdminDto(username, password);
-            dto.setUsername(username);
-            dto.setPassword(password);
+            var dto = new AdminDto(null, null);
+            dto.setUsername(adminDto.getUsername());
+            dto.setPassword(adminDto.getPassword());
+            System.out.println(dto.getUsername() + " " + dto.getPassword());
             return ResponseEntity.ok(adminService.login(dto));
         } catch (Exception e) {
             return ResponseEntity.status(401).body(null);
@@ -81,28 +92,50 @@ public class AdminController {
     }
 
     @GetMapping("/minuman/get")
-    public Iterable<Minuman> getAllMinuman() {
-        return minumanRepository.findAll()
-            .stream()
-            .map(minuman -> new Minuman(minuman.getId(), minuman.getNama(), minuman.getJenis(), minuman.getUkuran(), minuman.getHarga()))
-            .toList();
+    public Iterable<MinumanDto> getAllMinuman() {
+        List<MinumanDto> list = minumanRepository.findAll()
+        .stream()
+        .map(minumanMapper::toDto)
+        .toList();
+
+        System.out.println("DATA MINUMAN: " + list);
+        return list;
     }
 
     @PostMapping("/minuman/create")
-    public ResponseEntity<Minuman> createMinuman(@RequestBody Minuman minuman) {
-        var newMinuman = new Minuman(minuman.getId(), minuman.getNama(), minuman.getJenis(), minuman.getUkuran(), minuman.getHarga());
-        minumanRepository.save(newMinuman);
-        return ResponseEntity.ok(newMinuman);
+    public ResponseEntity<?> createMinuman(@RequestBody MinumanDto dto,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            // Ambil username/email dari sesi login
+            String username = userDetails.getUsername();
+
+            // Temukan admin berdasarkan username
+            Admin admin = adminRepository.findByUsername(username)
+                            .orElseThrow(() -> new RuntimeException("Admin tidak ditemukan"));
+
+            // Mapping dto ke entity
+            Minuman minuman = new Minuman();
+            minuman.setNama(dto.getNama());
+            minuman.setJenis(dto.getJenis());
+            minuman.setDeskripsi(dto.getDeskripsi());
+            minuman.setHarga(dto.getHarga());
+            minuman.setAdmin(admin); // set FK
+
+            return ResponseEntity.ok(minumanRepository.save(minuman));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
-    @PutMapping("minuman/update")
+
+    @PutMapping("minuman/update/{id}")
     public ResponseEntity<Minuman> updateMinuman(@PathVariable Long id, @RequestBody Minuman minuman) {
         var existingMinuman = minumanRepository.findById(id);
         if (existingMinuman.isPresent()) {
             var updatedMinuman = existingMinuman.get();
             updatedMinuman.setNama(minuman.getNama());
             updatedMinuman.setJenis(minuman.getJenis());
-            updatedMinuman.setUkuran(minuman.getUkuran());
+            // updatedMinuman.setUkuran(minuman.getUkuran());
             updatedMinuman.setHarga(minuman.getHarga());
             minumanRepository.save(updatedMinuman);
             return ResponseEntity.ok(updatedMinuman);

@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Admin {
@@ -17,7 +18,7 @@ public class Admin {
     @Column(unique=true)
     private String username;
     private String password;
-    protected ArrayList<Minuman> M;
+
 
     public Admin() {
     }
@@ -51,19 +52,5 @@ public class Admin {
     public void setId(Long id) {
         this.id = id;
     }
-
-    // @Override
-    // public void login() {
-    //     if (username == null || username.isEmpty()) {
-    //         System.out.println("Nama admin tidak boleh kosong.");
-    //         return;
-    //     } else if (getPassword() == null || getPassword().isEmpty()) {
-    //         System.out.println("Password tidak boleh kosong.");
-    //         return;
-    //     } else {
-    //         System.out.println("Login berhasil.");
-    //     }
-    //     System.out.println("Admin " + username + " logged in.");
-    // }
 
 }

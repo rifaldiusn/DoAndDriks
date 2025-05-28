@@ -1,18 +1,18 @@
-package com.example.websiteminuman.entities;
+// package com.example.websiteminuman.entities;
 
-import jakarta.persistence.MappedSuperclass;
+// import jakarta.persistence.MappedSuperclass;
 
-@MappedSuperclass
-public abstract class User {
-    private String password;
+// @MappedSuperclass
+// public abstract class User {
+//     private String password;
 
-    public User(String password) {
-        this.password = password;
-    }
+//     public User(String password) {
+//         this.password = password;
+//     }
 
-    public String getPassword() {
-        return password;
-    }
+//     public String getPassword() {
+//         return password;
+//     }
 
-    public abstract void login();
-}
+//     public abstract void login();
+// }

@@ -1,26 +1,35 @@
 package com.example.websiteminuman.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Minuman {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+
+    @Column(unique=true)
     private String nama;
     private String jenis;
-    private String ukuran;
+    private String deskripsi;
     private int harga;
+
+    @ManyToOne
+    @JoinColumn(name = "adminId")
+    private Admin adminId;
     
-    public Minuman(Long id, String nama, String jenis, String ukuran, int harga) {
+    public Minuman(Long id, String nama, String jenis, String deskripsi, int harga) {
         this.id = id;
         this.jenis = jenis;
         this.nama = nama;
         this.harga = harga;
-        this.ukuran = ukuran;
+        this.deskripsi = deskripsi;
     }
 
     public Minuman() {
@@ -58,11 +67,19 @@ public class Minuman {
         this.harga = harga;
     }
 
-    public String getUkuran() {
-        return ukuran;
+    public String getDeskripsi() {
+        return deskripsi;
     }
 
-    public void setUkuran(String ukuran) {
-        this.ukuran = ukuran;
+    public void setDeskripsi(String deskripsi) {
+        this.deskripsi = deskripsi;
+    }
+
+    public Long getAdminId() {
+        return adminId.getId();
+    }
+
+    public void setAdmin(Admin admin) {
+        this.adminId = admin;
     }
 }

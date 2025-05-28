@@ -76,4 +76,23 @@ public class CustomerController {
             return ResponseEntity.status(401).body(null);
         }
     }
+
+    @PostMapping("/coba/register")
+    public ResponseEntity<?> registerCustomer(@RequestParam String username , @RequestParam String email, @RequestParam String password) {
+        try {
+            CustomerDto customerDto = new CustomerDto();
+            customerDto.setUsername(username);
+            customerDto.setEmail(email);
+            customerDto.setPassword(password);
+            
+            if (customerRepository.existsByEmail(email)) {
+                return ResponseEntity.status(400).body("Email already exists");
+            }
+            var customer = customerMapper.toEntity(customerDto);
+            var savedCustomer = customerRepository.save(customer);
+            return ResponseEntity.ok(customerMapper.toAuthResponse(savedCustomer));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body("Registration failed" + e.getMessage());
+        }
+    }
 }

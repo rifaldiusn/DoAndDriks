@@ -8,5 +8,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Custom query methods can be defined here if needed
     // For example, findByUsername(String username);
     Optional<Customer> findByEmail(String email);
-
+    boolean existsByEmail(String email);
 }

@@ -67,4 +67,8 @@ public class homepageController {
     public String register() {
         return "registerCustomer"; // 
     }
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart"; // 
+    }
 }

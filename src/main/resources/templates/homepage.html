@@ -33,6 +33,8 @@
   </head>
 
   <body class="bg-black text-white font-body">
+    <div th:if="${message}" class="text-green-500 text-center my-4" th:text="${message}"></div>
+
     <div th:replace="~{fragments/navbar :: main-navbar}"></div>
 
     <!-- Hero Section -->
@@ -289,5 +291,6 @@
         loop: true,
       });
     </script>
+    
   </body>
 </html>

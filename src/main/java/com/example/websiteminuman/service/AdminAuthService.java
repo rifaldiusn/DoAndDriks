@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import com.example.websiteminuman.dto.AdminDto;
 import com.example.websiteminuman.dto.AuthResponseDto;
 import com.example.websiteminuman.dto.DelUpMinuman;
+import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
+import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.repositories.AdminRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 // import com.example.websiteminuman.security.JwtUtil;
@@ -37,6 +39,11 @@ public class AdminAuthService {
 
         // String token = jwtUtil.generateToken(admin.getUsername());
         return admin;
+    }
+
+    public Admin getAdminById(Long id) {
+        return adminRepo.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Admin Tidak Ditemukan"));
     }
 
     public DelUpMinuman delUpMinuman(Long id) {

@@ -10,7 +10,7 @@
     <!-- Sidebar -->
     <div class="flex h-screen">
       <aside class="w-64 bg-[#1a1a1a] p-6 space-y-4">
-        <h1 class="text-2xl font-bold text-red-500">MinuDash</h1>
+        <h1 class="text-2xl font-bold text-red-500">Do and Drinks Admin</h1>
         <nav class="space-y-2">
           <a
             href="#"
@@ -38,7 +38,10 @@
         <!-- Header -->
         <header class="flex justify-between items-center">
           <h2 class="text-3xl font-semibold">Dashboard Admin</h2>
-          <button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 text-sm">
+          <button
+            id="logoutBtn"
+            class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 text-sm"
+          >
             Logout
           </button>
         </header>
@@ -66,7 +69,12 @@
               placeholder="Harga"
               class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
             />
-            <select name="jenis" id="jenis" placeholder="Jenis Minuman" class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white">
+            <select
+              name="jenis"
+              id="jenis"
+              placeholder="Jenis Minuman"
+              class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+            >
               <option value="">Pilih Jenis Minuman</option>
               <option value="jus">Juice</option>
               <option value="kopi">Coffee</option>
@@ -130,92 +138,384 @@
                 <th class="px-4 py-2">Aksi</th>
               </tr>
             </thead>
-            <tbody id="minumanBody">
-            </tbody>
+            <tbody id="minumanBody"></tbody>
           </table>
         </section>
       </main>
     </div>
+
+    <!-- Modal Edit Minuman -->
+    <div
+      id="editModal"
+      class="fixed inset-0 bg-black bg-opacity-75 hidden z-50"
+      style="display: none"
+    >
+      <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#1f1f1f] p-6 rounded-lg w-96 border border-gray-600 shadow-2xl"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-white">Edit Minuman</h3>
+          <button
+            onclick="closeEditModal()"
+            class="text-gray-400 hover:text-white text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="editForm" class="space-y-4">
+          <input type="hidden" id="editId" name="id" />
+          <input
+            type="text"
+            id="editNama"
+            name="nama"
+            placeholder="Nama Minuman"
+            class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+          />
+          <input
+            type="number"
+            id="editHarga"
+            name="harga"
+            placeholder="Harga"
+            class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+          />
+          <select
+            name="jenis"
+            id="editJenis"
+            class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+          >
+            <option value="">Pilih Jenis Minuman</option>
+            <option value="jus">Juice</option>
+            <option value="kopi">Coffee</option>
+            <option value="teh">Tea</option>
+          </select>
+          <textarea
+            name="deskripsi"
+            id="editDeskripsi"
+            placeholder="Deskripsi"
+            class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+          ></textarea>
+          <div class="flex space-x-2">
+            <button
+              type="submit"
+              class="bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-white"
+            >
+              Simpan
+            </button>
+            <button
+              type="button"
+              onclick="closeEditModal()"
+              class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700 text-white"
+            >
+              Batal
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div
+      id="deleteModal"
+      class="fixed inset-0 bg-black bg-opacity-75 hidden z-50"
+      style="display: none"
+    >
+      <div
+        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#1f1f1f] p-6 rounded-lg w-80 border border-gray-600 shadow-2xl"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-white">Konfirmasi Hapus</h3>
+          <button
+            onclick="closeDeleteModal()"
+            class="text-gray-400 hover:text-white text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <p class="text-gray-300 mb-6">
+          Apakah Anda yakin ingin menghapus minuman ini?
+        </p>
+        <div class="flex space-x-2">
+          <button
+            id="confirmDeleteBtn"
+            class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 text-white"
+          >
+            Ya, Hapus
+          </button>
+          <button
+            onclick="closeDeleteModal()"
+            class="bg-gray-600 px-4 py-2 rounded hover:bg-gray-700 text-white"
+          >
+            Batal
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
   <script>
-  document.getElementById('logoutBtn').addEventListener('click', async function() {
-    const response = await fetch('/auth/admin/logout', {
-      method: 'GET',
-      credentials: 'include'
-    });
+    let currentDeleteId = null;
+    let isModalOpen = false; // Flag untuk mencegah klik bersamaan
 
-    if (response.ok) {
-      window.location.href = '/loginAdmin';
-    } else {
-      alert('Gagal logout, silakan coba lagi.');
-    }
-  });
-  document.getElementById('minumanForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+    document
+      .getElementById("logoutBtn")
+      .addEventListener("click", async function () {
+        if (isModalOpen) return; // Cegah aksi jika modal sedang terbuka
 
-    const nama = document.getElementById('nama').value;
-    const harga = parseInt(document.getElementById('harga').value);
-    const jenis = document.getElementById('jenis').value;
-    const deskripsi = document.getElementById('deskripsi').value;
+        const response = await fetch("/auth/admin/logout", {
+          method: "GET",
+          credentials: "include",
+        });
 
-    if (harga <= 0) {
-      alert('Harga harus berupa angka positif!');
-      return;
-    } else if (deskripsi.length < 10) {
-      alert('Deskripsi harus lebih dari 10 karakter!');
-      return;
-    } else if (!nama || !harga || !jenis || !deskripsi) {
-      alert('Semua field harus diisi!');
-      return;
-    }  
+        if (response.ok) {
+          window.location.href = "/loginAdmin";
+        } else {
+          alert("Gagal logout, silakan coba lagi.");
+        }
+      });
 
-    const response = await fetch('/auth/admin/minuman/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ nama, harga, jenis, deskripsi})
-    });
+    document
+      .getElementById("minumanForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
 
-    if (response.ok) {
-      alert('Minuman berhasil ditambahkan!');
-      // bisa redirect atau reset form di sini
-    } else {
-      alert('Gagal menambahkan minuman.');
-    }
-  });
-  
-  async function loadMinuman() {
-    try {
-      const response = await fetch('/auth/admin/minuman/get');
-      if (!response.ok) throw new Error('Gagal mengambil data');
-      const data = await response.json();
+        const nama = document.getElementById("nama").value;
+        const harga = parseInt(document.getElementById("harga").value);
+        const jenis = document.getElementById("jenis").value;
+        const deskripsi = document.getElementById("deskripsi").value;
 
-      const tbody = document.getElementById('minumanBody');
-      let rows = '';
+        if (harga <= 0) {
+          alert("Harga harus berupa angka positif!");
+          return;
+        } else if (deskripsi.length < 10) {
+          alert("Deskripsi harus lebih dari 10 karakter!");
+          return;
+        } else if (!nama || !harga || !jenis || !deskripsi) {
+          alert("Semua field harus diisi!");
+          return;
+        }
 
-      data.forEach(minuman => {
-        rows += `
+        const response = await fetch("/auth/admin/minuman/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ nama, harga, jenis, deskripsi }),
+        });
+
+        if (response.ok) {
+          alert("Minuman berhasil ditambahkan!");
+          document.getElementById("minumanForm").reset();
+          loadMinuman(); // Reload data
+        } else {
+          alert("Gagal menambahkan minuman.");
+        }
+      });
+
+    // Form Edit Submit
+    document
+      .getElementById("editForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const id = document.getElementById("editId").value;
+        const nama = document.getElementById("editNama").value;
+        const harga = parseInt(document.getElementById("editHarga").value);
+        const jenis = document.getElementById("editJenis").value;
+        const deskripsi = document.getElementById("editDeskripsi").value;
+
+        if (harga <= 0) {
+          alert("Harga harus berupa angka positif!");
+          return;
+        } else if (deskripsi.length < 10) {
+          alert("Deskripsi harus lebih dari 10 karakter!");
+          return;
+        } else if (!nama || !harga || !jenis || !deskripsi) {
+          alert("Semua field harus diisi!");
+          return;
+        }
+
+        const response = await fetch(`/auth/admin/minuman/update/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ nama, harga, jenis, deskripsi }),
+        });
+
+        if (response.ok) {
+          alert("Minuman berhasil diupdate!");
+          closeEditModal();
+          loadMinuman(); // Reload data
+        } else {
+          alert("Gagal mengupdate minuman.");
+        }
+      });
+
+    async function loadMinuman() {
+      try {
+        const response = await fetch("/auth/admin/minuman/get");
+        if (!response.ok) throw new Error("Gagal mengambil data");
+        const data = await response.json();
+
+        const tbody = document.getElementById("minumanBody");
+        let rows = "";
+
+        data.forEach((minuman) => {
+          rows += `
           <tr class="hover:bg-[#2a2a2a]">
             <td class="px-4 py-2">${minuman.nama}</td>
             <td class="px-4 py-2">Rp ${minuman.harga}</td>
             <td class="px-4 py-2">${minuman.jenis}</td>
             <td class="px-4 py-2">${minuman.deskripsi}</td>
             <td class="px-4 py-2 space-x-2">
-              <a href="/admin/minuman/edit/${minuman.id}" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</a>
-              <a href="/admin/minuman/hapus/${minuman.id}" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Hapus</a>
+              <button onclick="openEditModal(${minuman.id}, '${minuman.nama}', ${minuman.harga}, '${minuman.jenis}', '${minuman.deskripsi}')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</button>
+              <button onclick="openDeleteModal(${minuman.id})" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Hapus</button>
             </td>
           </tr>
         `;
-      });
+        });
 
         tbody.innerHTML = rows;
       } catch (err) {
-        console.error('Gagal memuat data minuman:', err);
+        console.error("Gagal memuat data minuman:", err);
       }
-  }
+    }
+
+    // Fungsi untuk membuka modal edit
+    function openEditModal(id, nama, harga, jenis, deskripsi) {
+      if (isModalOpen) return; // Cegah membuka modal jika sudah ada yang terbuka
+
+      isModalOpen = true;
+      document.getElementById("editId").value = id;
+      document.getElementById("editNama").value = nama;
+      document.getElementById("editHarga").value = harga;
+      document.getElementById("editJenis").value = jenis;
+      document.getElementById("editDeskripsi").value = deskripsi;
+
+      const modal = document.getElementById("editModal");
+      modal.style.display = "block";
+      modal.classList.remove("hidden");
+
+      // Tambahkan smooth animation
+      setTimeout(() => {
+        modal.style.opacity = "1";
+      }, 10);
+    }
+
+    // Fungsi untuk menutup modal edit
+    function closeEditModal() {
+      const modal = document.getElementById("editModal");
+      modal.style.opacity = "0";
+
+      setTimeout(() => {
+        modal.style.display = "none";
+        modal.classList.add("hidden");
+        document.getElementById("editForm").reset();
+        isModalOpen = false;
+      }, 200);
+    }
+
+    // Fungsi untuk membuka modal konfirmasi hapus
+    function openDeleteModal(id) {
+      if (isModalOpen) return; // Cegah membuka modal jika sudah ada yang terbuka
+
+      isModalOpen = true;
+      currentDeleteId = id;
+
+      const modal = document.getElementById("deleteModal");
+      modal.style.display = "block";
+      modal.classList.remove("hidden");
+
+      // Tambahkan smooth animation
+      setTimeout(() => {
+        modal.style.opacity = "1";
+      }, 10);
+    }
+
+    // Fungsi untuk menutup modal konfirmasi hapus
+    function closeDeleteModal() {
+      const modal = document.getElementById("deleteModal");
+      modal.style.opacity = "0";
+
+      setTimeout(() => {
+        modal.style.display = "none";
+        modal.classList.add("hidden");
+        currentDeleteId = null;
+        isModalOpen = false;
+      }, 200);
+    }
+
+    // Event listener untuk tombol konfirmasi hapus
+    document
+      .getElementById("confirmDeleteBtn")
+      .addEventListener("click", async function () {
+        if (currentDeleteId && isModalOpen) {
+          try {
+            const response = await fetch(
+              `/auth/admin/minuman/delete/${currentDeleteId}`,
+              {
+                method: "DELETE",
+                credentials: "include",
+              }
+            );
+
+            if (response.ok) {
+              alert("Minuman berhasil dihapus!");
+              closeDeleteModal();
+              loadMinuman(); // Reload data
+            } else {
+              alert("Gagal menghapus minuman.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Terjadi kesalahan saat menghapus minuman.");
+          }
+        }
+      });
+
     // Panggil fungsi saat halaman selesai dimuat
-    window.addEventListener('DOMContentLoaded', loadMinuman);
+    window.addEventListener("DOMContentLoaded", loadMinuman);
+
+    function showSection(id) {
+      const sections = ["tambahMinuman", "laporanPesanan", "kelolaMenu"];
+      sections.forEach((sec) => {
+        document.getElementById(sec).classList.add("hidden");
+      });
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    // Menutup modal saat klik di luar modal
+    window.addEventListener("click", function (event) {
+      const editModal = document.getElementById("editModal");
+      const deleteModal = document.getElementById("deleteModal");
+
+      if (event.target === editModal && isModalOpen) {
+        closeEditModal();
+      }
+      if (event.target === deleteModal && isModalOpen) {
+        closeDeleteModal();
+      }
+    });
+
+    // Mencegah klik pada tombol saat modal terbuka
+    document.addEventListener("click", function (event) {
+      if (
+        isModalOpen &&
+        (event.target.matches("button") || event.target.matches("a"))
+      ) {
+        // Izinkan klik pada tombol di dalam modal
+        const editModal = document.getElementById("editModal");
+        const deleteModal = document.getElementById("deleteModal");
+
+        if (
+          !editModal.contains(event.target) &&
+          !deleteModal.contains(event.target)
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }
+    });
   </script>
 </html>

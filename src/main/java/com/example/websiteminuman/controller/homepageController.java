@@ -71,4 +71,10 @@ public class homepageController {
     public String cart() {
         return "cart"; // 
     }
+
+    @GetMapping("editMinumanAdmin")
+    public String editMinuman() {
+        return "editMinumanAdmin"; // 
+    }
+   
 }

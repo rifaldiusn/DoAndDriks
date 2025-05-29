@@ -1,32 +1,23 @@
 package com.example.websiteminuman.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.websiteminuman.dto.CustomerDto;
-import com.example.websiteminuman.dto.AuthResponseDto;
-import com.example.websiteminuman.entities.Customer;
-import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.mapper.CustomerMapper;
-
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-
 import com.example.websiteminuman.repositories.CustomerRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-@RestController
+@Controller
 @RequestMapping("/auth/customer")
 
 public class CustomerController {
@@ -49,15 +40,6 @@ public class CustomerController {
             .map(customerMapper::toDto)
             .toList();
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
-        var customer = customerRepository.findById(id).orElse(null);
-        if (customer == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(customerMapper.toDto(customer));
-    }
     
     @GetMapping("/sort/{field}")
     public Iterable<CustomerDto> getAllCustomersSorted(@PathVariable String field) {
@@ -68,17 +50,19 @@ public class CustomerController {
     }
 
     @PostMapping("/coba/login")
-    public ResponseEntity<Customer> loginCustomer(@RequestParam String email, @RequestParam String password, HttpServletRequest request) {
-        try{
-            var customer = customerService.login2(email, password);
-            return ResponseEntity.ok(customer);
+    public String loginCustomer(@RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            customerService.login2(email, password);
+            redirectAttributes.addFlashAttribute("message", "Login berhasil");
+            return "redirect:/";
         } catch (Exception e) {
-            return ResponseEntity.status(401).body(null);
+            redirectAttributes.addFlashAttribute("error", "Login gagal: " + e.getMessage());
+            return "redirect:/logincust";
         }
     }
 
     @PostMapping("/coba/register")
-    public ResponseEntity<?> registerCustomer(@RequestParam String username , @RequestParam String email, @RequestParam String password) {
+    public String registerCustomer(@RequestParam String username , @RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes) {
         try {
             CustomerDto customerDto = new CustomerDto();
             customerDto.setUsername(username);
@@ -86,13 +70,17 @@ public class CustomerController {
             customerDto.setPassword(password);
             
             if (customerRepository.existsByEmail(email)) {
-                return ResponseEntity.status(400).body("Email already exists");
+                redirectAttributes.addFlashAttribute("error", "Email sudah terdaftar");
+                return "redirect:/registerCustomer";
             }
             var customer = customerMapper.toEntity(customerDto);
-            var savedCustomer = customerRepository.save(customer);
-            return ResponseEntity.ok(customerMapper.toAuthResponse(savedCustomer));
+            customerRepository.save(customer);
+            redirectAttributes.addFlashAttribute("message", "Registrasi berhasil, silakan login");
+            return "redirect:/logincust";
         } catch (Exception e) {
-            return ResponseEntity.status(400).body("Registration failed" + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Registrasi gagal: " + e.getMessage());
+            return "redirect:/registerCustomer";
+            
         }
     }
 }

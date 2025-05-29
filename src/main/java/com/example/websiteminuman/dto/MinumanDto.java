@@ -6,6 +6,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class MinumanDto {
+    private Long id;
     private String nama;
     private String jenis;
     private String deskripsi;
@@ -39,5 +40,10 @@ public class MinumanDto {
     public void setHarga(int harga) {
         this.harga = harga;
     }
-
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

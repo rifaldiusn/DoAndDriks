@@ -82,21 +82,21 @@ public class AdminController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginAdmin(@RequestBody AdminDto adminDto, HttpSession session) {
-    try {
-        var dto = new AdminDto(null, null);
-        dto.setUsername(adminDto.getUsername());
-        dto.setPassword(adminDto.getPassword());
+        try {
+            var dto = new AdminDto(null, null);
+            dto.setUsername(adminDto.getUsername());
+            dto.setPassword(adminDto.getPassword());
 
-        Admin admin = adminService.login(dto);
+            Admin admin = adminService.login(dto);
 
-        // Simpan username ke session
-        session.setAttribute("username", admin.getUsername());
+            // Simpan username ke session
+            session.setAttribute("username", admin.getUsername());
 
-        return ResponseEntity.ok("Login berhasil");
-    } catch (Exception e) {
-        return ResponseEntity.status(401).body("Login Gagal");
+            return ResponseEntity.ok("Login berhasil");
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Login Gagal");
+        }
     }
-}
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpSession session) {
@@ -138,30 +138,56 @@ public class AdminController {
 
 
 
-    @PutMapping("minuman/update/{id}")
-    public ResponseEntity<Minuman> updateMinuman(@PathVariable Long id, @RequestBody Minuman minuman) {
-        var existingMinuman = minumanRepository.findById(id);
-        if (existingMinuman.isPresent()) {
-            var updatedMinuman = existingMinuman.get();
-            updatedMinuman.setNama(minuman.getNama());
-            updatedMinuman.setJenis(minuman.getJenis());
-            // updatedMinuman.setUkuran(minuman.getUkuran());
-            updatedMinuman.setHarga(minuman.getHarga());
-            minumanRepository.save(updatedMinuman);
-            return ResponseEntity.ok(updatedMinuman);
-        } else {
-            return ResponseEntity.notFound().build();
+    @PutMapping("/minuman/update/{id}")
+    public ResponseEntity<?> updateMinuman(@PathVariable Long id,
+                                        @RequestBody MinumanDto dto,
+                                        HttpSession session) {
+        try {
+            String username = (String) session.getAttribute("username");
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Belum login");
+            }
+
+            Admin admin = adminRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Admin tidak ditemukan"));
+
+            Minuman existingMinuman = minumanRepository.findById(id)
+                    .orElse(null);
+            if (existingMinuman == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Minuman tidak ditemukan");
+            }
+
+            existingMinuman.setNama(dto.getNama());
+            existingMinuman.setHarga(dto.getHarga());
+            existingMinuman.setDeskripsi(dto.getDeskripsi());
+            existingMinuman.setJenis(dto.getJenis());
+            existingMinuman.setAdmin(admin);
+
+            minumanRepository.save(existingMinuman);
+
+            return ResponseEntity.ok("Minuman berhasil diupdate");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error updating Minuman: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/minuman/delete/{id}")
-    public ResponseEntity<Void> deleteMinuman(@PathVariable Long id) {
-        var existingMinuman = minumanRepository.findById(id);
-        if (existingMinuman.isPresent()) {
-            minumanRepository.delete(existingMinuman.get());
+    public ResponseEntity<Void> deleteMinuman(@PathVariable Long id, HttpSession session) {
+        try {
+            Minuman minuman = minumanRepository.findById(id).orElse(null);
+            if (minuman == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            minumanRepository.delete(minuman);
+            String username = (String) session.getAttribute("username");
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            System.out.println("MINUMAN DELETED BY: " + username);
             return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }    

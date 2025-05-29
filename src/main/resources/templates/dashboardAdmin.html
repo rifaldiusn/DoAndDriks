@@ -184,9 +184,9 @@
             class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
           >
             <option value="">Pilih Jenis Minuman</option>
-            <option value="jus">Juice</option>
-            <option value="kopi">Coffee</option>
-            <option value="teh">Tea</option>
+            <option value="Juice">Juice</option>
+            <option value="Coffee">Coffee</option>
+            <option value="Tea">Tea</option>
           </select>
           <textarea
             name="deskripsi"
@@ -352,6 +352,34 @@
         }
       });
 
+          // Event listener untuk tombol konfirmasi hapus
+    document
+      .getElementById("confirmDeleteBtn")
+      .addEventListener("click", async function () {
+        if (currentDeleteId && isModalOpen) {
+          try {
+            const response = await fetch(
+              `/auth/admin/minuman/delete/${currentDeleteId}`,
+              {
+                method: "DELETE",
+                credentials: "include",
+              }
+            );
+
+            if (response.ok) {
+              alert("Minuman berhasil dihapus!");
+              closeDeleteModal();
+              loadMinuman(); // Reload data
+            } else {
+              alert("Gagal menghapus minuman.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("Terjadi kesalahan saat menghapus minuman.");
+          }
+        }
+      });
+
     async function loadMinuman() {
       try {
         const response = await fetch("/auth/admin/minuman/get");
@@ -446,37 +474,6 @@
       }, 200);
     }
 
-    // Event listener untuk tombol konfirmasi hapus
-    document
-      .getElementById("confirmDeleteBtn")
-      .addEventListener("click", async function () {
-        if (currentDeleteId && isModalOpen) {
-          try {
-            const response = await fetch(
-              `/auth/admin/minuman/delete/${currentDeleteId}`,
-              {
-                method: "DELETE",
-                credentials: "include",
-              }
-            );
-
-            if (response.ok) {
-              alert("Minuman berhasil dihapus!");
-              closeDeleteModal();
-              loadMinuman(); // Reload data
-            } else {
-              alert("Gagal menghapus minuman.");
-            }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("Terjadi kesalahan saat menghapus minuman.");
-          }
-        }
-      });
-
-    // Panggil fungsi saat halaman selesai dimuat
-    window.addEventListener("DOMContentLoaded", loadMinuman);
-
     function showSection(id) {
       const sections = ["tambahMinuman", "laporanPesanan", "kelolaMenu"];
       sections.forEach((sec) => {
@@ -517,5 +514,7 @@
         }
       }
     });
+     // Panggil fungsi saat halaman selesai dimuat
+    window.addEventListener("DOMContentLoaded", loadMinuman);
   </script>
 </html>

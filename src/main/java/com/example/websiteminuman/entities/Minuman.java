@@ -2,6 +2,7 @@ package com.example.websiteminuman.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Minuman {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique=true)
@@ -20,11 +21,12 @@ public class Minuman {
     private String deskripsi;
     private int harga;
 
-    @ManyToOne
-    @JoinColumn(name = "adminId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "adminId", nullable = false)
     private Admin adminId;
     
-    public Minuman(Long id, String nama, String jenis, String deskripsi, int harga) {
+    public Minuman(Long id, String nama, String jenis, String deskripsi, int harga, Admin admin) {
+        this.adminId = admin;
         this.id = id;
         this.jenis = jenis;
         this.nama = nama;

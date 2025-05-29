@@ -38,7 +38,7 @@
         <!-- Header -->
         <header class="flex justify-between items-center">
           <h2 class="text-3xl font-semibold">Dashboard Admin</h2>
-          <button class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 text-sm">
+          <button id="logoutBtn" class="bg-red-600 px-4 py-2 rounded hover:bg-red-700 text-sm">
             Logout
           </button>
         </header>
@@ -138,6 +138,18 @@
     </div>
   </body>
   <script>
+  document.getElementById('logoutBtn').addEventListener('click', async function() {
+    const response = await fetch('/auth/admin/logout', {
+      method: 'GET',
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      window.location.href = '/loginAdmin';
+    } else {
+      alert('Gagal logout, silakan coba lagi.');
+    }
+  });
   document.getElementById('minumanForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -145,14 +157,25 @@
     const harga = parseInt(document.getElementById('harga').value);
     const jenis = document.getElementById('jenis').value;
     const deskripsi = document.getElementById('deskripsi').value;
-    const adminId = parseInt(document.getElementById('adminId').value);
+
+    if (harga <= 0) {
+      alert('Harga harus berupa angka positif!');
+      return;
+    } else if (deskripsi.length < 10) {
+      alert('Deskripsi harus lebih dari 10 karakter!');
+      return;
+    } else if (!nama || !harga || !jenis || !deskripsi) {
+      alert('Semua field harus diisi!');
+      return;
+    }  
 
     const response = await fetch('/auth/admin/minuman/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ nama, harga, jenis, deskripsi, adminId })
+      credentials: 'include',
+      body: JSON.stringify({ nama, harga, jenis, deskripsi})
     });
 
     if (response.ok) {

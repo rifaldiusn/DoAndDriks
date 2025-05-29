@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.AdminAuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,71 +63,79 @@ public class AdminController {
             .toList();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AdminDto> getAdminById(@PathVariable Long id) {
-        var admin = adminRepository.findById(id).orElse(null);
-        if (admin == null){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(adminMapper.toDto(admin));
-    }
+    // @GetMapping("/{id}")
+    // public ResponseEntity<AdminDto> getAdminById(@PathVariable Long id) {
+    //     var admin = adminRepository.findById(id).orElse(null);
+    //     if (admin == null){
+    //         return ResponseEntity.notFound().build();
+    //     }
+    //     return ResponseEntity.ok(adminMapper.toDto(admin));
+    // }
 
-    @GetMapping("/sort/{field}")
-    public Iterable<AdminDto> getSortedAdmins(@PathVariable String field) {
-        return adminRepository.findAll(Sort.by(field))
-            .stream()
-            .map(adminMapper::toDto)
-            .toList();
-    }
+    // @GetMapping("/sort/{field}")
+    // public Iterable<AdminDto> getSortedAdmins(@PathVariable String field) {
+    //     return adminRepository.findAll(Sort.by(field))
+    //         .stream()
+    //         .map(adminMapper::toDto)
+    //         .toList();
+    // }
 
     @PostMapping("/login")
-    public ResponseEntity<Admin> loginAdmin(@RequestBody AdminDto adminDto) {
-        try {
-            var dto = new AdminDto(null, null);
-            dto.setUsername(adminDto.getUsername());
-            dto.setPassword(adminDto.getPassword());
-            System.out.println(dto.getUsername() + " " + dto.getPassword());
-            return ResponseEntity.ok(adminService.login(dto));
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body(null);
-        }
-    }
+    public ResponseEntity<?> loginAdmin(@RequestBody AdminDto adminDto, HttpSession session) {
+    try {
+        var dto = new AdminDto(null, null);
+        dto.setUsername(adminDto.getUsername());
+        dto.setPassword(adminDto.getPassword());
 
+        Admin admin = adminService.login(dto);
+
+        // Simpan username ke session
+        session.setAttribute("username", admin.getUsername());
+
+        return ResponseEntity.ok("Login berhasil");
+    } catch (Exception e) {
+        return ResponseEntity.status(401).body("Login Gagal");
+    }
+}
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok("Berhasil logout");
+    }
+    
     @GetMapping("/minuman/get")
     public Iterable<MinumanDto> getAllMinuman() {
         List<MinumanDto> list = minumanRepository.findAll()
         .stream()
         .map(minumanMapper::toDto)
         .toList();
-
-        System.out.println("DATA MINUMAN: " + list);
         return list;
     }
 
     @PostMapping("/minuman/create")
     public ResponseEntity<?> createMinuman(@RequestBody MinumanDto dto,
-                                        @AuthenticationPrincipal UserDetails userDetails) {
+                                        HttpSession session) {
         try {
-            // Ambil username/email dari sesi login
-            String username = userDetails.getUsername();
+            String username = (String) session.getAttribute("username");
+            if (username == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Belum login");
+            }
 
-            // Temukan admin berdasarkan username
             Admin admin = adminRepository.findByUsername(username)
-                            .orElseThrow(() -> new RuntimeException("Admin tidak ditemukan"));
+                                .orElseThrow(() -> new RuntimeException("Admin tidak ditemukan"));
 
-            // Mapping dto ke entity
-            Minuman minuman = new Minuman();
-            minuman.setNama(dto.getNama());
-            minuman.setJenis(dto.getJenis());
-            minuman.setDeskripsi(dto.getDeskripsi());
-            minuman.setHarga(dto.getHarga());
-            minuman.setAdmin(admin); // set FK
+            Minuman minuman = minumanMapper.toEntity(dto);
+            minuman.setAdmin(admin);
 
+            System.out.println("CREATE MINUMAN: " + minuman.getNama() + " by " + admin.getUsername());
             return ResponseEntity.ok(minumanRepository.save(minuman));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            e.printStackTrace(); // debug error sebenarnya
+            return ResponseEntity.badRequest().body("Error creating Minuman: " + e.getMessage());
         }
     }
+
 
 
     @PutMapping("minuman/update/{id}")

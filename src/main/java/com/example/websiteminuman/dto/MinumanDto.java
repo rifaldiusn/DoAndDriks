@@ -1,8 +1,5 @@
 package com.example.websiteminuman.dto;
 
-import com.example.websiteminuman.entities.Admin;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,8 +11,6 @@ public class MinumanDto {
     private String deskripsi;
     private int harga;
 
-    @JsonIgnore
-    private Admin admin;
     
     public MinumanDto() {
         // Default constructor

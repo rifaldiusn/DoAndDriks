@@ -43,18 +43,55 @@
 
           <!-- Right Side Elements -->
           <div class="flex items-center space-x-4">
+            <!-- Download App Button (selalu tampil) -->
             <a
               th:href="@{/download}"
               class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
             >
               Download App
             </a>
-            <a
-              th:href="@{/logincust}"
-              class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
+
+            <!-- LOGIN SECTION - Tampil jika BELUM login -->
+            <div
+              th:if="${session.isLoggedIn == null or session.isLoggedIn == false}"
             >
-              Login
-            </a>
+              <a
+                th:href="@{/logincust}"
+                class="bg-cola-red hover:bg-red-800 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Login
+              </a>
+            </div>
+
+            <!-- LOGOUT SECTION - Tampil jika SUDAH login -->
+            <div
+              th:if="${session.isLoggedIn == true}"
+              class="flex items-center space-x-3"
+            >
+              <!-- Welcome Message -->
+              <span class="text-gray-300 text-sm hidden sm:block">
+                Hello,
+                <span
+                  class="text-cola-red font-medium"
+                  th:text="${session.customerName}"
+                  >Customer</span
+                >
+              </span>
+
+              <!-- Logout Button -->
+              <form
+                th:action="@{/auth/customer/logout}"
+                method="post"
+                class="inline"
+              >
+                <button
+                  type="submit"
+                  class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+                >
+                  Logout
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

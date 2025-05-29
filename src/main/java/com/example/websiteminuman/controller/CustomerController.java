@@ -16,6 +16,7 @@ import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/auth/customer")
@@ -48,12 +49,23 @@ public class CustomerController {
             .map(customerMapper::toDto)
             .toList();
     }
+   
 
     @PostMapping("/coba/login")
-    public String loginCustomer(@RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String loginCustomer(@RequestParam String email, @RequestParam String password, 
+                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
-            customerService.login2(email, password);
-            redirectAttributes.addFlashAttribute("message", "Login berhasil");
+            // Authenticate user
+            CustomerDto customer = customerMapper.toDto(customerService.login2(email, password));
+            
+            // Simpan informasi customer di session
+            HttpSession session = request.getSession();
+            session.setAttribute("loggedInCustomer", customer);
+            session.setAttribute("isLoggedIn", true);
+            session.setAttribute("customerName", customer.getUsername());
+            session.setAttribute("customerEmail", customer.getEmail());
+            
+            redirectAttributes.addFlashAttribute("message", "Login berhasil! Selamat datang " + customer.getUsername());
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Login gagal: " + e.getMessage());
@@ -83,4 +95,24 @@ public class CustomerController {
             
         }
     }
+    @PostMapping("/logout")
+    public String logoutCustomer(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            // Hapus semua data session
+            session.removeAttribute("loggedInCustomer");
+            session.removeAttribute("isLoggedIn");
+            session.removeAttribute("customerName");
+            session.removeAttribute("customerEmail");
+            session.invalidate(); // Hapus session sepenuhnya
+        }
+        
+        redirectAttributes.addFlashAttribute("message", "Anda telah berhasil logout");
+        return "redirect:/";
+    }
+    @GetMapping("/logout")
+    public String logoutCustomerGet(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        return logoutCustomer(request, redirectAttributes);
+    }
+
 }

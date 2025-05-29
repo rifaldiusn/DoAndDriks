@@ -23,6 +23,9 @@ public class CustomerDto {
     public void setUsername(String username) {
         this.username = username;
     }
+    public String getUsername() {
+        return username;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -30,6 +33,9 @@ public class CustomerDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public String getEmail() {
+        return email;
     }
 
     public void setPassword(String password) {

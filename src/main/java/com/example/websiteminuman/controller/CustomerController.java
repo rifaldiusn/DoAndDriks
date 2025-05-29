@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.websiteminuman.dto.CustomerDto;
+import com.example.websiteminuman.entities.Cart;
+import com.example.websiteminuman.entities.Payment;
 import com.example.websiteminuman.mapper.CustomerMapper;
 import com.example.websiteminuman.repositories.CustomerRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
@@ -55,6 +57,7 @@ public class CustomerController {
     public String loginCustomer(@RequestParam String email, @RequestParam String password, 
                                RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
+<<<<<<< HEAD
             // Authenticate user
             CustomerDto customer = customerMapper.toDto(customerService.login2(email, password));
             
@@ -66,6 +69,11 @@ public class CustomerController {
             session.setAttribute("customerEmail", customer.getEmail());
             
             redirectAttributes.addFlashAttribute("message", "Login berhasil! Selamat datang " + customer.getUsername());
+=======
+            customerService.login2(email, password);
+            request.getSession().setAttribute("loggedIncustomer", email);
+            redirectAttributes.addFlashAttribute("message", "Login berhasil");
+>>>>>>> 3521eece4b3e492b61d5d325043c026c1c933714
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Login gagal: " + e.getMessage());
@@ -95,6 +103,7 @@ public class CustomerController {
             
         }
     }
+<<<<<<< HEAD
     @PostMapping("/logout")
     public String logoutCustomer(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession(false);
@@ -115,4 +124,33 @@ public class CustomerController {
         return logoutCustomer(request, redirectAttributes);
     }
 
+=======
+
+    @PostMapping("/coba/add")
+    public String addTocart (@RequestParam Long minumanId , RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String email = (String) request.getSession().getAttribute("loggedIncustomer");
+        if (email == null) {
+            redirectAttributes.addFlashAttribute("error", "Anda harus login terlebih dahulu");
+            return "redirect:/logincust";
+        }
+        var customer = customerRepository.findByEmail(email);
+        if (customer == null) {
+            redirectAttributes.addFlashAttribute("error", "Customer tidak ditemukan");
+            return "redirect:/logincust";
+        }
+
+        var minuman = minumanRepository.findById(minumanId).orElse(null);
+        if (minuman == null){
+            redirectAttributes.addFlashAttribute("error", "Minuman tidak ditemukan");
+            return "redirect:/logincust";
+        }
+
+        Cart cart = new Cart();
+        cart.setCustomerEmail(email);
+        minuman = minumanRepository.findById(minumanId).orElse(null);
+        cart.setMinuman(minuman);
+
+        return "redirect:/menu";
+    }
+>>>>>>> 3521eece4b3e492b61d5d325043c026c1c933714
 }

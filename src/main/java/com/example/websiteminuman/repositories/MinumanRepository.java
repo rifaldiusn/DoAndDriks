@@ -8,6 +8,7 @@ import com.example.websiteminuman.entities.Minuman;
 public interface MinumanRepository extends JpaRepository<Minuman, Long> {
     // Custom query methods can be defined here if needed
     // For example, findByNama(String nama);
-
+    Minuman findByNama(String nama);
+    boolean existsByNama(String nama);
 }
  

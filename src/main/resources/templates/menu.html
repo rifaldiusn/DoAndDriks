@@ -134,7 +134,7 @@
 </p>
               <p class="text-cola-gold font-bold text-lg">IDR 22K</p>
               <button 
-                  onclick="addToCart('Latte', 'IDR 22K')" 
+                  onclick="addToCart(1)" 
                   class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
                   Add to Cart
               </button>
@@ -157,7 +157,7 @@
 </p>
               <p class="text-cola-gold font-bold text-lg">IDR 27K</p>
               <button 
-                  onclick="addToCart('Espresso', 'IDR 27K')" 
+                  onclick="addToCart(2)" 
                   class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
                   Add to Cart
               </button>
@@ -180,7 +180,7 @@
 </p>
               <p class="text-cola-gold font-bold text-lg">IDR 21K</p>
               <button 
-                  onclick="addToCart('Capuccino', 'IDR 21K')" 
+                  onclick="addToCart(3)" 
                   class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
                   Add to Cart
               </button>
@@ -213,7 +213,7 @@
 </p>
               <p class="text-cola-gold font-bold text-lg">IDR 30K</p>
               <button 
-                  onclick="addToCart('Avocado', 'IDR 30K')" 
+                  onclick="addToCart(4)" 
                   class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
                   Add to Cart
               </button>
@@ -236,7 +236,7 @@
 </p>
               <p class="text-cola-gold font-bold text-lg">IDR 25K</p>
               <button 
-                  onclick="addToCart('Manggo', 'IDR 25K')" 
+                  onclick="addToCart(5)" 
                   class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
                   Add to Cart
               </button>
@@ -259,7 +259,7 @@
 </p>
               <p class="text-cola-gold font-bold text-lg">IDR 23K</p>
               <button 
-                  onclick="addToCart('Capuccino', 'IDR 21K')" 
+                  onclick="addToCart(6)" 
                   class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
                   Add to Cart
               </button>
@@ -365,5 +365,29 @@
     </div>
     </footer>
     </main>
+    <script>
+        function addToCart(minumanId) {
+          fetch('/auth/customer/coba/add', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: 'minumanId=' + encodeURIComponent(minumanId)
+          })
+          .then(response => {
+            if (response.redirected) {
+              window.location.href = response.url; 
+            } else {
+              return response.text();
+            }
+          })
+          .then(data => {
+            alert('Berhasil menambah ke cart!');
+          })
+          .catch(error => {
+            alert('Gagal menambah ke cart!');
+          });
+}
+</script>
   </body>
 </html>

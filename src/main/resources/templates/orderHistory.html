@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Riwayat Pesanan - DO AND DRINKS</title>
+        <link th:href="@{/main.css}" rel="stylesheet" />
+        <script>
+            tailwind.config = {
+                theme: {
+                extend: {
+                colors: {
+                    "cola-red": "#dc2626",
+                    "cola-dark": "#991b1b",
+                    "cola-gold": "#fbbf24",
+                },
+                fontFamily: {
+                    display: ["Georgia", "serif"],
+                },
+                },
+                },
+            };
+        </script>
+        <style>
+            /* Animasi Fade In Up */
+            .fade-in-up {
+                opacity: 0;
+                transform: translateY(40px);
+                animation: fadeInUp 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+            }
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            /* Jarak antar order lebih rapet */
+            .order-gap {
+                margin-bottom: 18px;
+            }
+            @media (min-width: 768px) {
+                .order-gap {
+                    margin-bottom: 16px;
+                }
+            }
+        </style>
+    </head>
+    <body class="bg-black text-white min-h-screen font-sans">
+        <!-- Main Order History Content -->
+        <div class="max-w-4xl mx-auto px-6 py-16">
+            <h2
+                class="text-3xl font-bold text-cola-red mb-8 text-center font-display"
+            >
+                RIWAYAT PESANAN
+            </h2>
+
+            <!-- Order History List -->
+            <div class="space-y-8 mb-8">
+                <!-- Order 1 -->
+                <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: .1s;">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div>
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-001</span>
+                                <span class="text-gray-400 text-xs">Tanggal: 27 Mei 2025</span>
+                            </div>
+                            <div class="ml-1">
+                                <ul class="text-white text-base list-disc list-inside">
+                                    <li>Latte x2 <span class="text-gray-400 text-sm">(IDR 22K)</span></li>
+                                    <li>Espresso x1 <span class="text-gray-400 text-sm">(IDR 27K)</span></li>
+                                </ul>
+                                <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">DANA</span></p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end mt-4 md:mt-0">
+                            <span class="text-lg font-bold text-cola-red">Total: IDR 71K</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Order 2 -->
+                <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: .25s;">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div>
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-002</span>
+                                <span class="text-gray-400 text-xs">Tanggal: 25 Mei 2025</span>
+                            </div>
+                            <div class="ml-1">
+                                <ul class="text-white text-base list-disc list-inside">
+                                    <li>Manggo x1 <span class="text-gray-400 text-sm">(IDR 25K)</span></li>
+                                    <li>Jasmine Tea x2 <span class="text-gray-400 text-sm">(IDR 10K)</span></li>
+                                </ul>
+                                <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">Cash</span></p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end mt-4 md:mt-0">
+                            <span class="text-lg font-bold text-cola-red">Total: IDR 45K</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Order 3 -->
+                <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: 4s;">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div>
+                            <div class="flex items-center space-x-3 mb-2">
+                                <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-003</span>
+                                <span class="text-gray-400 text-xs">Tanggal: 22 Mei 2025</span>
+                            </div>
+                            <div class="ml-1">
+                                <ul class="text-white text-base list-disc list-inside">
+                                    <li>Avocado x1 <span class="text-gray-400 text-sm">(IDR 30K)</span></li>
+                                    <li>Milk Tea x1 <span class="text-gray-400 text-sm">(IDR 12K)</span></li>
+                                </ul>
+                                <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">GoPay</span></p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end mt-4 md:mt-0">
+                            <span class="text-lg font-bold text-cola-red">Total: IDR 42K</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <a
+                    href="/menu"
+                    class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                >
+                    Kembali ke Menu
+                </a>
+            </div>
+        </div>
+        <script>
+            /* triger animasi fade up saat halaman siap */
+            window.addEventListener("DOMContentLoaded", () => {
+                document.querySelectorAll('.fade-in-up').forEach((el, idx) => {
+                    el.style.animationDelay = (0.1 + idx*0.15) + 's';
+                });
+            });
+        </script>>
+    </body>
+</html>

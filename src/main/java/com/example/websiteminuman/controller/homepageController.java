@@ -72,6 +72,10 @@ public class homepageController {
     public String cart() {
         return "cart"; // 
     }
+    @GetMapping("/order-history")
+    public String orderHistory() {
+        return "orderHistory"; // 
+    }
 
     @GetMapping("editMinumanAdmin")
     public String editMinuman() {

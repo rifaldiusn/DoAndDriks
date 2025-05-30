@@ -2,6 +2,7 @@ package com.example.websiteminuman.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class homepageController {
@@ -77,4 +78,14 @@ public class homepageController {
         return "editMinumanAdmin"; // 
     }
    
+    @GetMapping("/payment")
+    public String showPaymentPage() {
+        return "payment";
+    }
+
+   @GetMapping("/paymentSuccess")
+    public String showPaymentSuccessPage() {
+        return "paymentSuccess";
+    }
+
 }

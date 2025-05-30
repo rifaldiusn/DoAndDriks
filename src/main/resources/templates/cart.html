@@ -142,54 +142,55 @@
 
       <!-- Cart Summary -->
       <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
-        <div class="space-y-4">
-          <div class="flex justify-between items-center">
-            <span class="text-lg font-semibold">Total Harga:</span>
-            <span class="text-2xl font-bold text-cola-gold" id="total-price"
-              >IDR 71K</span
-            >
-          </div>
+  <div class="space-y-6">
+    <div class="flex justify-between items-center">
+      <span class="text-lg font-semibold">Total Harga:</span>
+      <span class="text-2xl font-bold text-cola-gold" id="total-price">IDR 71K</span>
+    </div>
 
-          <div class="border-t border-gray-700 pt-4">
-            <label class="block text-sm font-medium mb-2"
-              >Metode Pembayaran:</label
-            >
-            <select
-              class="w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-cola-gold focus:outline-none"
-            >
-              <option value="">Pilih metode pembayaran</option>
-              <option value="cash">Cash</option>
-              <option value="credit">Credit Card</option>
-              <option value="debit">Debit Card</option>
-              <option value="dana">DANA</option>
-              <option value="ovo">OVO</option>
-              <option value="gopay">GoPay</option>
-              <option value="bank-transfer">Bank Transfer</option>
-            </select>
-          </div>
+    <div class="border-t border-gray-700 pt-4">
+      <label class="block text-sm font-medium mb-2">Metode Pembayaran:</label>
+      <select
+        id="payment-method"
+        class="payment-method w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-cola-gold focus:outline-none"
+      >
+        <option value="">Pilih metode pembayaran</option>
+        <option value="cash">Cash</option>
+        <option value="credit">Credit Card</option>
+        <option value="debit">Debit Card</option>
+        <option value="dana">DANA</option>
+        <option value="ovo">OVO</option>
+        <option value="gopay">GoPay</option>
+        <option value="bank-transfer">Bank Transfer</option>
+      </select>
+    </div>
 
-          <div class="pt-4">
-            <button
-              class="w-full bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
-            >
-              BAYAR SEKARANG
-            </button>
-          </div>
+    <div class="pt-4">
+     <button
+     id="pay-now"
+     class="w-full block text-center bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+    >
+     BAYAR SEKARANG
+    </button>
 
-          <div class="pt-2">
-            <a
-              href="/menu"
-              class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
-            >
-              Kembali ke Menu
-            </a>
-          </div>
-        </div>
+    </div>
+
+    <div class="pt-2">
+      <a
+        href="/menu"
+        class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+      >
+        Kembali ke Menu
+      </a>
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
 
+        <!-- Script JavaScript -->
     <script>
-      // Cart functionality
       const cartItems = {
         latte: { price: 22000, qty: 2 },
         espresso: { price: 27000, qty: 1 },
@@ -197,24 +198,22 @@
 
       function increaseQuantity(item) {
         cartItems[item].qty++;
-        document.getElementById(item + "-qty").textContent =
-          cartItems[item].qty;
+        document.getElementById(item + "-qty").textContent = cartItems[item].qty;
         updateTotalPrice();
       }
 
       function decreaseQuantity(item) {
         if (cartItems[item].qty > 1) {
           cartItems[item].qty--;
-          document.getElementById(item + "-qty").textContent =
-            cartItems[item].qty;
-          updateTotalPrice();
+          document.getElementById(item + "-qty").textContent = cartItems[item].qty;
+          updateTotalPrice(); 
         }
       }
 
       function removeItem(item) {
         if (confirm("Hapus item dari keranjang?")) {
           delete cartItems[item];
-          location.reload(); // In real app, you'd remove the DOM element
+          location.reload();
         }
       }
 
@@ -227,7 +226,25 @@
           "IDR " + Math.floor(total / 1000) + "K";
       }
 
-      // Initialize
+      //(tidak dalam <script> di dalam <script>)
+      document.addEventListener("DOMContentLoaded", function () {
+        const payNowButton = document.getElementById("pay-now");
+        const paymentSelect = document.getElementById("payment-method");
+
+        if (payNowButton && paymentSelect) {
+          payNowButton.addEventListener("click", function () {
+            const selectedMethod = paymentSelect.value;
+
+            if (!selectedMethod) {
+              alert("Silakan pilih metode pembayaran terlebih dahulu!");
+            } else {
+              window.location.href = "/payment";
+            }
+          });
+        }
+      });
+
+      // Panggil saat halaman selesai dimuat
       updateTotalPrice();
     </script>
   </body>

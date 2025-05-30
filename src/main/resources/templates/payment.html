@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pembayaran - DO AND DRINKS</title>
+    <link href="/main.css" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "cola-red": "#dc2626",
+              "cola-dark": "#991b1b",
+              "cola-gold": "#fbbf24",
+            },
+            fontFamily: {
+              display: ["Georgia", "serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-black text-white min-h-screen font-sans">
+    <div class="max-w-xl mx-auto px-6 py-16">
+      <h2 class="text-3xl font-bold text-cola-gold mb-8 text-center font-display">
+        PEMBAYARAN
+      </h2>
+
+      <div class="bg-gray-900 rounded-lg p-6 border border-gray-700 space-y-6">
+        <div>
+          <p class="text-lg font-semibold">Total Pembayaran:</p>
+          <p class="text-3xl font-bold text-cola-gold">IDR 71K</p>
+        </div>
+
+        <a
+            href="/paymentSuccess"
+            class="block text-center w-full bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+        >
+            KONFIRMASI PEMBAYARAN
+        </a>
+
+        <a
+          href="/cart"
+          class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+        >
+            Kembali ke Cart
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

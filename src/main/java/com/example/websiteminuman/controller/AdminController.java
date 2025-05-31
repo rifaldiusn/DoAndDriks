@@ -6,7 +6,6 @@ import com.example.websiteminuman.dto.AdminDto;
 import com.example.websiteminuman.dto.AuthResponseDto;
 import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
-// import com.example.websiteminuman.entities.Admin;
 import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.mapper.AdminMapper;
 import com.example.websiteminuman.mapper.MinumanMapper;
@@ -161,6 +160,7 @@ public class AdminController {
             existingMinuman.setHarga(dto.getHarga());
             existingMinuman.setDeskripsi(dto.getDeskripsi());
             existingMinuman.setJenis(dto.getJenis());
+            existingMinuman.setGambar(dto.getGambar());
             existingMinuman.setAdmin(admin);
 
             minumanRepository.save(existingMinuman);

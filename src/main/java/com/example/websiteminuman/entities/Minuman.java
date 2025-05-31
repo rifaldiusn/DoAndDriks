@@ -19,19 +19,21 @@ public class Minuman {
     private String nama;
     private String jenis;
     private String deskripsi;
+    private String gambar;
     private int harga;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adminId", nullable = false)
     private Admin adminId;
     
-    public Minuman(Long id, String nama, String jenis, String deskripsi, int harga, Admin admin) {
+    public Minuman(Long id, String nama, String jenis, String deskripsi, String gambar, int harga, Admin admin) {
         this.adminId = admin;
         this.id = id;
         this.jenis = jenis;
         this.nama = nama;
         this.harga = harga;
         this.deskripsi = deskripsi;
+        this.gambar = gambar;
     }
 
     public Minuman() {
@@ -77,6 +79,13 @@ public class Minuman {
         this.deskripsi = deskripsi;
     }
 
+    public String getGambar() {
+        return gambar;
+    }
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
+    }
+    
     public Long getAdminId() {
         return adminId.getId();
     }

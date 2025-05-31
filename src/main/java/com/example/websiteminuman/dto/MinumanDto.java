@@ -10,6 +10,7 @@ public class MinumanDto {
     private String nama;
     private String jenis;
     private String deskripsi;
+    private String gambar;
     private int harga;
 
     
@@ -39,6 +40,12 @@ public class MinumanDto {
     }
     public void setHarga(int harga) {
         this.harga = harga;
+    }
+    public String getGambar() {
+        return gambar;
+    }
+    public void setGambar(String gambar) {
+        this.gambar = gambar;
     }
     public Long getId() {
         return id;

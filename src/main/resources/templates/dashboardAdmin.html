@@ -76,9 +76,9 @@
               class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
             >
               <option value="">Pilih Jenis Minuman</option>
-              <option value="jus">Juice</option>
-              <option value="kopi">Coffee</option>
-              <option value="teh">Tea</option>
+              <option value="Juice">Juice</option>
+              <option value="Coffee">Coffee</option>
+              <option value="Tea">Tea</option>
             </select>
             <textarea
               name="deskripsi"
@@ -86,6 +86,14 @@
               placeholder="Deskripsi"
               class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
             ></textarea>
+
+            <textarea
+              name="gambar"
+              id="gambar"
+              placeholder="Link URL Gambar (Opsional)"
+              class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+            ></textarea>
+            
             <button
               type="submit"
               class="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
@@ -135,6 +143,7 @@
                 <th class="px-4 py-2">Harga</th>
                 <th class="px-4 py-2">Jenis</th>
                 <th class="px-4 py-2">Deskripsi</th>
+                <th class="px-4 py-2">Gambar</th>
                 <th class="px-4 py-2">Aksi</th>
               </tr>
             </thead>
@@ -194,6 +203,12 @@
             placeholder="Deskripsi"
             class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
           ></textarea>
+           <textarea
+              name="gambar"
+              id="editGambar"
+              placeholder="Link URL Gambar (Opsional)"
+              class="w-full p-2 bg-[#2a2a2a] rounded border border-gray-600 text-white"
+            ></textarea>
           <div class="flex space-x-2">
             <button
               type="submit"
@@ -281,6 +296,7 @@
         const harga = parseInt(document.getElementById("harga").value);
         const jenis = document.getElementById("jenis").value;
         const deskripsi = document.getElementById("deskripsi").value;
+        const gambar = document.getElementById("gambar").value;
 
         if (harga <= 0) {
           alert("Harga harus berupa angka positif!");
@@ -299,7 +315,7 @@
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ nama, harga, jenis, deskripsi }),
+          body: JSON.stringify({ nama, harga, jenis, deskripsi, gambar }),
         });
 
         if (response.ok) {
@@ -322,6 +338,8 @@
         const harga = parseInt(document.getElementById("editHarga").value);
         const jenis = document.getElementById("editJenis").value;
         const deskripsi = document.getElementById("editDeskripsi").value;
+        const gambar = document.getElementById("editGambar").value;
+
 
         if (harga <= 0) {
           alert("Harga harus berupa angka positif!");
@@ -340,7 +358,7 @@
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ nama, harga, jenis, deskripsi }),
+          body: JSON.stringify({ nama, harga, jenis, deskripsi, gambar }),
         });
 
         if (response.ok) {
@@ -396,8 +414,9 @@
             <td class="px-4 py-2">Rp ${minuman.harga}</td>
             <td class="px-4 py-2">${minuman.jenis}</td>
             <td class="px-4 py-2">${minuman.deskripsi}</td>
+            <td class="px-4 py-2">${minuman.gambar}</td>
             <td class="px-4 py-2 space-x-2">
-              <button onclick="openEditModal(${minuman.id}, '${minuman.nama}', ${minuman.harga}, '${minuman.jenis}', '${minuman.deskripsi}')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</button>
+              <button onclick="openEditModal(${minuman.id}, '${minuman.nama}', ${minuman.harga}, '${minuman.jenis}', '${minuman.deskripsi}, ${minuman.gambar}')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</button>
               <button onclick="openDeleteModal(${minuman.id})" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Hapus</button>
             </td>
           </tr>
@@ -420,6 +439,7 @@
       document.getElementById("editHarga").value = harga;
       document.getElementById("editJenis").value = jenis;
       document.getElementById("editDeskripsi").value = deskripsi;
+      document.getElementById("gambar").value = gambar
 
       const modal = document.getElementById("editModal");
       modal.style.display = "block";

@@ -34,7 +34,7 @@
       </aside>
 
       <!-- Main content -->
-      <main class="flex-1 p-8 space-y-10 overflow-y-auto">
+      <main class="flex-1 p-8 space-y-10 overflow-y-auto ">
         <!-- Header -->
         <header class="flex justify-between items-center">
           <h2 class="text-3xl font-semibold">Dashboard Admin</h2>
@@ -134,7 +134,7 @@
         </section>
 
         <!-- Kelola Menu (Update & Delete) -->
-        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow">
+        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow w-full">
           <h3 class="text-xl font-bold mb-4">Kelola Minuman</h3>
           <table class="w-full table-auto text-sm">
             <thead class="text-left bg-[#2a2a2a]">
@@ -409,16 +409,18 @@
 
         data.forEach((minuman) => {
           rows += `
-          <tr class="hover:bg-[#2a2a2a]">
+          <tr class="hover:bg-[#2a2a2a] ">
             <td class="px-4 py-2">${minuman.nama}</td>
             <td class="px-4 py-2">Rp ${minuman.harga}</td>
             <td class="px-4 py-2">${minuman.jenis}</td>
             <td class="px-4 py-2">${minuman.deskripsi}</td>
             <td class="px-4 py-2">${minuman.gambar}</td>
-            <td class="px-4 py-2 space-x-2">
-              <button onclick="openEditModal(${minuman.id}, '${minuman.nama}', ${minuman.harga}, '${minuman.jenis}', '${minuman.deskripsi}, ${minuman.gambar}')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</button>
+            <td class="px-4 py-2">
+            <div class="flex space-x-2 ">
+              <button onclick="openEditModal(${minuman.id}, '${minuman.nama}', ${minuman.harga}, '${minuman.jenis}', '${minuman.deskripsi}', '${minuman.gambar}')" class="bg-yellow-500 px-3 py-1 rounded hover:bg-yellow-600 text-black">Edit</button>
               <button onclick="openDeleteModal(${minuman.id})" class="bg-red-600 px-3 py-1 rounded hover:bg-red-700">Hapus</button>
-            </td>
+            </div>
+          </td>
           </tr>
         `;
         });
@@ -439,7 +441,7 @@
       document.getElementById("editHarga").value = harga;
       document.getElementById("editJenis").value = jenis;
       document.getElementById("editDeskripsi").value = deskripsi;
-      document.getElementById("gambar").value = gambar
+      document.getElementById("editGambar").value = gambar
 
       const modal = document.getElementById("editModal");
       modal.style.display = "block";

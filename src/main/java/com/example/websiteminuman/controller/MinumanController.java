@@ -35,4 +35,12 @@ public class MinumanController {
         return list;
     }
     
+    @GetMapping("/search")
+    public @ResponseBody Iterable<MinumanDto> searchMinuman(@RequestParam String keyword) {
+        List<MinumanDto> list = minumanRepository.findByNamaContainingIgnoreCase(keyword)
+        .stream()
+        .map(minumanMapper::toDto)
+        .toList();
+        return list;
+    }
 }

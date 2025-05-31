@@ -72,22 +72,22 @@
           <div class="flex items-center space-x-4">   
 
             <!-- Search Icon -->
-            <form action="/search" method="GET" class="relative flex items-center">
-              <input
-                type="text"
-                name="query"
-                placeholder="Search menu..."
-                class="bg-cola-dark border border-cola-gold text-white rounded-lg pl-10 pr-2 py-1 focus:outline-none focus:ring-2 focus:ring-cola-gold focus:border-transparent"
-                required
+            <form id="searchForm" class="relative flex items-center">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search menu..."
+              class="bg-cola-dark border border-cola-gold text-white rounded-lg pl-10 pr-2 py-1 focus:outline-none focus:ring-2 focus:ring-cola-gold focus:border-transparent"
+            />
+            <button type="submit" class="absolute left-3">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
+                alt="Search Icon"
+                class="w-4 h-4 text-gray-400"
               />
-              <button type="submit" class="absolute left-3">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/622/622669.png"
-                  alt="Search Icon"
-                  class="w-4 h-4 text-gray-400"
-                />
-              </button>
-            </form>
+            </button>
+          </form>
+
 
           <!-- Order History -->
         <a
@@ -144,65 +144,111 @@
     </div>
     </footer>
     </main>
+
     <script>
  const menuContainer = document.getElementById("menu-container");
  
-function formatHarga(harga) {
-  if (harga >= 1_000_000) return 'IDR' + ' ' +(harga / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-  if (harga >= 1_000) return 'IDR' + ' ' + (harga / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
-  return harga.toString();
-}
-  // Ambil data dari backend
+  function formatHarga(harga) {
+    if (harga >= 1_000_000) return 'IDR' + ' ' +(harga / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (harga >= 1_000) return 'IDR' + ' ' + (harga / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return harga.toString();
+  }
+    // Ambil data dari backend
+    fetch("/minuman/menu")
+      .then((response) => response.json())
+      .then((menus) => {
+        const groupedMenus = menus.reduce((acc, item) => {
+          if (!acc[item.jenis]) acc[item.jenis] = [];
+          acc[item.jenis].push(item);
+          return acc;
+        }, {});
+
+        const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+        for (const type in groupedMenus) {
+          const section = document.createElement("section");
+          section.className = "max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8";
+          
+          section.innerHTML = `
+            <div class="text-center mb-12">
+              <h2 class="text-3xl font-display text-cola-gold underline" style="text-underline-offset: 0.5rem;">
+                ${capitalize(type)}
+              </h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+              ${groupedMenus[type].map(menu => `
+                <div class="flex flex-col items-center bg-black bg-opacity-80 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                  <div class="relative">
+                    <img src="${menu.gambar}" alt="${menu.nama}" 
+                        class="w-48 h-48 object-cover opacity-70 hover:opacity-100 transition duration-300 rounded-full cursor-pointer">
+                  </div>
+                  <div class="p-6 text-center">
+                    <h3 class="text-xl font-display font-bold text-cola-gold mb-4">- ${menu.nama} -</h3>
+                    <p class="text-gray-300 font-body mb-4">${menu.deskripsi}</p>
+                    <p class="text-cola-gold font-bold text-lg">${formatHarga(menu.harga)}</p>
+                    <button onclick="addToCart(${menu.id})" 
+                            class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          `;
+
+          menuContainer.appendChild(section);
+        }
+      })
+      .catch((err) => {
+        console.error("Gagal memuat menu:", err);
+        menuContainer.innerHTML = "<p class='text-red-500 text-center'>Gagal memuat menu.</p>";
+      });
+
+      document.getElementById("searchForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  if (!query) {
+    alert("Silahkan Isi Pencarian Anda.");
+    return;
+  }
+
   fetch("/minuman/menu")
-    .then((response) => response.json())
-    .then((menus) => {
-      const groupedMenus = menus.reduce((acc, item) => {
-        if (!acc[item.jenis]) acc[item.jenis] = [];
-        acc[item.jenis].push(item);
-        return acc;
-      }, {});
+    .then(res => res.json())
+    .then(data => {
+      const filtered = data.filter(menu =>
+        menu.nama.toLowerCase().includes(query)
+      );
 
-      const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+      // Bersihkan hasil sebelumnya
+      menuContainer.innerHTML = "";
 
-      for (const type in groupedMenus) {
-        const section = document.createElement("section");
-        section.className = "max-w-6xl mx-auto py-16 px-4 sm:px-6 lg:px-8";
-        
-        section.innerHTML = `
-          <div class="text-center mb-12">
-            <h2 class="text-3xl font-display text-cola-gold underline" style="text-underline-offset: 0.5rem;">
-              ${capitalize(type)}
-            </h2>
-          </div>
-          <div class="grid md:grid-cols-3 gap-8">
-            ${groupedMenus[type].map(menu => `
-              <div class="flex flex-col items-center bg-black bg-opacity-80 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                <div class="relative">
-                  <img src="${menu.gambar}" alt="${menu.nama}" 
-                       class="w-48 h-48 object-cover opacity-70 hover:opacity-100 transition duration-300 rounded-full cursor-pointer">
-                </div>
-                <div class="p-6 text-center">
-                  <h3 class="text-xl font-display font-bold text-cola-gold mb-4">- ${menu.nama} -</h3>
-                  <p class="text-gray-300 font-body mb-4">${menu.deskripsi}</p>
-                  <p class="text-cola-gold font-bold text-lg">${formatHarga(menu.harga)}</p>
-                  <button onclick="addToCart(${menu.id})" 
-                          class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-
-        menuContainer.appendChild(section);
+      if (filtered.length === 0) {
+        menuContainer.innerHTML = "<p class='text-red-500 text-center'>Menu tidak ditemukan.</p>";
+        return;
       }
-    })
-    .catch((err) => {
-      console.error("Gagal memuat menu:", err);
-      menuContainer.innerHTML = "<p class='text-red-500 text-center'>Gagal memuat menu.</p>";
-    });
 
+      // Tampilkan hasil pencarian
+      const cards = filtered.map(menu => `
+        <div class="flex flex-col items-center bg-black bg-opacity-80 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+          <div class="relative">
+            <img src="${menu.gambar}" alt="${menu.nama}" 
+              class="w-48 h-48 object-cover opacity-70 hover:opacity-100 transition duration-300 rounded-full cursor-pointer">
+          </div>
+          <div class="p-6 text-center">
+            <h3 class="text-xl font-display font-bold text-cola-gold mb-4">- ${menu.nama} -</h3>
+            <p class="text-gray-300 font-body mb-4">${menu.deskripsi}</p>
+            <p class="text-cola-gold font-bold text-lg">Rp ${formatHarga(menu.harga)}</p>
+            <button onclick="addToCart(${menu.id})" 
+              class="bg-cola-red text-white px-4 py-2 rounded-lg mt-2 hover:bg-cola-gold">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join("");
+
+      menuContainer.innerHTML = `<div class="grid md:grid-cols-3 gap-8">${cards}</div>`;
+    });
+});
   function addToCart(minumanId) {
           fetch('/auth/customer/coba/add', {
             method: 'POST',

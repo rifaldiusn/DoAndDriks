@@ -58,7 +58,9 @@
         </div>
 
         <!-- Welcome Message -->
-              <span class="text-gray-300 text-base sm:block mr-6">
+              <span 
+                th:if="${session.isLoggedIn == true}"
+                class="text-gray-300 text-base sm:block mr-6">
                 Hello,
                 <span
                   class="text-cola-red font-medium"

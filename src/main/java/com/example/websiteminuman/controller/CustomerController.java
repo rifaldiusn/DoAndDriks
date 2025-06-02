@@ -263,6 +263,7 @@ public class CustomerController {
             itemHistory.setMinumanId(cart.getMinumanId());
             historyRepository.save(itemHistory);
         }
+        cartRepository.deleteAll(carts);
         result.put("success", true);
         result.put("message", "Pembayaran berhasil disimpan.");
         return result;

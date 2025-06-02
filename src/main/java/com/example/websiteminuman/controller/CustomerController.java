@@ -1,5 +1,7 @@
 package com.example.websiteminuman.controller;
 
+import java.util.Map;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,12 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.websiteminuman.dto.CustomerDto;
 import com.example.websiteminuman.entities.Cart;
 import com.example.websiteminuman.entities.Payment;
 import com.example.websiteminuman.mapper.CustomerMapper;
+import com.example.websiteminuman.repositories.CartRepository;
 import com.example.websiteminuman.repositories.CustomerRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
@@ -28,8 +32,10 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
     private final MinumanRepository minumanRepository;
     private final CustomerAuthService customerService;
+    private final CartRepository cartRepository;
 
-    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper, MinumanRepository minumanRepository, CustomerAuthService customerService) {
+    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper, MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository) {
+        this.cartRepository = cartRepository;
         this.minumanRepository = minumanRepository;
         this.customerMapper = customerMapper;
         this.customerRepository = customerRepository;
@@ -66,6 +72,7 @@ public class CustomerController {
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("customerName", customer.getUsername());
             session.setAttribute("customerEmail", customer.getEmail());
+            session.setAttribute("customerId", customer.getId());
             
             redirectAttributes.addFlashAttribute("message", "Login berhasil! Selamat datang " + customer.getUsername());
             return "redirect:/";
@@ -117,30 +124,39 @@ public class CustomerController {
         return logoutCustomer(request, redirectAttributes);
     }
     @PostMapping("/coba/add")
-    public String addTocart (@RequestParam Long minumanId , RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        String email = (String) request.getSession().getAttribute("loggedIncustomer");
+    @ResponseBody
+    public Map<String, Object> addTocart (@RequestParam Long minumanId , RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        Map<String, Object> result = new java.util.HashMap<>();
+        String email = (String) request.getSession().getAttribute("customerEmail");
         if (email == null) {
-            redirectAttributes.addFlashAttribute("error", "Anda harus login terlebih dahulu");
-            return "redirect:/logincust";
+            result.put("success", false);
+            result.put("message", "Anda harus login terlebih dahulu");
+            result.put("redirect", "/logincust");
+            return result;
         }
         var customer = customerRepository.findByEmail(email);
         if (customer == null) {
-            redirectAttributes.addFlashAttribute("error", "Customer tidak ditemukan");
-            return "redirect:/logincust";
+            result.put("success", false);
+            result.put("message", "Customer tidak ditemukan");
+            result.put("redirect", "/logincust");
+            return result;
         }
 
         var minuman = minumanRepository.findById(minumanId).orElse(null);
         if (minuman == null){
-            redirectAttributes.addFlashAttribute("error", "Minuman tidak ditemukan");
-            return "redirect:/logincust";
+            result.put("success", false);
+            result.put("message", "Minuman tidak ditemukan");
+            result.put("redirect", "/menu");
+            return result;
         }
-
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
         Cart cart = new Cart();
-        cart.setCustomerEmail(email);
-        minuman = minumanRepository.findById(minumanId).orElse(null);
-        cart.setMinuman(minuman);
-
-        return "redirect:/menu";
+        cart.setCustomerId(customerId);
+        cart.setMinumanId(minumanId);
+        cartRepository.save(cart);
+        result.put("success", true);
+        result.put("message", "Minuman berhasil ditambahkan ke keranjang");
+        return result;
     }
 
 }

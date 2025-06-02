@@ -14,8 +14,8 @@ public class Payment {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     
-    private Long customerId;
-    private String metode;
+    private Long customer_id;
+    private String metodePembayaran;
     private int nominal;
 
     // Getters and Setters
@@ -24,19 +24,19 @@ public class Payment {
     }
 
     public Long getCustomerId() {
-        return customerId;
+        return customer_id;
     }
 
     public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+        this.customer_id = customerId;
     }
 
     public String getMetode() {
-        return metode;
+        return metodePembayaran;
     }
 
     public void setMetode(String metode) {
-        this.metode = metode;
+        this.metodePembayaran = metode;
     }
 
     public int getNominal() {

@@ -24,10 +24,13 @@ import com.example.websiteminuman.mapper.CustomerMapper;
 import com.example.websiteminuman.repositories.CartRepository;
 import com.example.websiteminuman.repositories.CustomerRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
+import com.example.websiteminuman.repositories.PaymentRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/auth/customer")
@@ -38,8 +41,10 @@ public class CustomerController {
     private final MinumanRepository minumanRepository;
     private final CustomerAuthService customerService;
     private final CartRepository cartRepository;
+    private final PaymentRepository paymentRepository;
 
-    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper, MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository) {
+    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper, MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository, PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
         this.cartRepository = cartRepository;
         this.minumanRepository = minumanRepository;
         this.customerMapper = customerMapper;
@@ -221,6 +226,30 @@ public class CustomerController {
         response.put("message", "Item berhasil dihapus dari keranjang");
         return response;
     }
+
+    @PostMapping("/payment")
+    @ResponseBody
+    public Map<String, Object> savePayment(
+        @RequestParam String metode,
+        @RequestParam Integer nominal,
+        HttpServletRequest request) {
+    Long customerId = (Long) request.getSession().getAttribute("customerId");
+    Map<String, Object> result = new HashMap<>();
+    if (customerId == null) {
+        result.put("success", false);
+        result.put("message", "Anda harus login.");
+        return result;
+    }
+    Payment payment = new Payment();
+    payment.setCustomerId(customerId);
+    payment.setMetode(metode);
+    payment.setNominal(nominal);
+    paymentRepository.save(payment);
+
+    result.put("success", true);
+    result.put("message", "Pembayaran berhasil disimpan.");
+    return result;
+}
 
 }
 

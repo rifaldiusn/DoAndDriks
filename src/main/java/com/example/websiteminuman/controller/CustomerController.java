@@ -1,9 +1,13 @@
 package com.example.websiteminuman.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.websiteminuman.dto.CustomerDto;
 import com.example.websiteminuman.entities.Cart;
+import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.entities.Payment;
 import com.example.websiteminuman.mapper.CustomerMapper;
 import com.example.websiteminuman.repositories.CartRepository;
@@ -159,4 +164,63 @@ public class CustomerController {
         return result;
     }
 
+    @GetMapping("/cart")
+    @ResponseBody
+    public List<Map<String, Object>> getCartItems(HttpServletRequest request) {
+    Long customerId = (Long) request.getSession().getAttribute("customerId");
+    if (customerId == null) {
+        throw new RuntimeException("Anda harus login terlebih dahulu.");
+    }
+
+    // Ambil semua item cart berdasarkan customerId
+    List<Cart> carts = cartRepository.findByCustomerId(customerId);
+
+    // Buat list untuk menyimpan hasil dengan data minuman
+    List<Map<String, Object>> result = new ArrayList<>();
+
+    for (Cart cart : carts) {
+        // Ambil data minuman berdasarkan minumanId
+        Minuman minuman = minumanRepository.findById(cart.getMinumanId()).orElse(null);
+
+        // Jika minuman tidak ditemukan, skip item ini
+        if (minuman == null) continue;
+
+        // Gabungkan data cart dan minuman
+        Map<String, Object> item = new HashMap<>();
+        item.put("id", cart.getId());
+        item.put("minuman", minuman); // Masukkan data minuman
+
+        result.add(item);
+    }
+
+        return result;
+    }
+
+    @DeleteMapping("/cart/{cartId}")
+        @ResponseBody
+    public Map<String, Object> deleteCartItem(@PathVariable Long cartId, HttpServletRequest request) {
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        if (customerId == null) {
+            throw new RuntimeException("Anda harus login terlebih dahulu.");
+        }
+
+    // Cari item cart berdasarkan ID dan customerId
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Item tidak ditemukan"));
+
+        if (!cart.getCustomerId().equals(customerId)) {
+            throw new RuntimeException("Anda tidak memiliki akses untuk menghapus item ini.");
+        }
+
+        // Hapus item dari database
+        cartRepository.delete(cart);
+
+        // Response sukses
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Item berhasil dihapus dari keranjang");
+        return response;
+    }
+
 }
+

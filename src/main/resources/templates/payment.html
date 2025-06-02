@@ -29,9 +29,9 @@
       </h2>
 
       <div class="bg-gray-900 rounded-lg p-6 border border-gray-700 space-y-6">
-        <div>
+        <div class="flex justify-between items-center">
           <p class="text-lg font-semibold">Total Pembayaran:</p>
-          <p class="text-3xl font-bold text-cola-gold">IDR 71K</p>
+          <span class="text-2xl font-bold text-cola-gold" id="total-harga"></span>
         </div>
 
         <a
@@ -49,5 +49,11 @@
         </a>
       </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const totalHarga = sessionStorage.getItem("totalHarga") || "IDR 0K";
+        document.getElementById("total-harga").textContent = totalHarga;
+      });
+    </script>
   </body>
 </html>

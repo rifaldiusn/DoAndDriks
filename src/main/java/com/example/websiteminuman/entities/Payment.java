@@ -3,22 +3,47 @@ package com.example.websiteminuman.entities;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Payment {
-    private String MetodePembayaran;
-    protected ArrayList<Minuman> M;
-    protected ArrayList<History> H;
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long id;
+    
+    private Long customerId;
+    private String metode;
+    private int nominal;
 
-    public Payment(String MetodePembayaran) {
-        this.MetodePembayaran = MetodePembayaran;
-        this.M = new ArrayList<>();
-        this.H = new ArrayList<>();
+    // Getters and Setters
+    public Long getId() {
+        return id;
     }
 
-    public String getMetodePembayaran() {
-        return MetodePembayaran;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setMetodePembayaran(String MetodePembayaran) {
-        this.MetodePembayaran = MetodePembayaran;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getMetode() {
+        return metode;
+    }
+
+    public void setMetode(String metode) {
+        this.metode = metode;
+    }
+
+    public int getNominal() {
+        return nominal;
+    }
+
+    public void setNominal(int nominal) {
+        this.nominal = nominal;
     }
 }

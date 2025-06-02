@@ -1,10 +1,12 @@
 package com.example.websiteminuman.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,11 +20,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.websiteminuman.dto.CustomerDto;
 import com.example.websiteminuman.entities.Cart;
+import com.example.websiteminuman.entities.History;
 import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.entities.Payment;
 import com.example.websiteminuman.mapper.CustomerMapper;
 import com.example.websiteminuman.repositories.CartRepository;
 import com.example.websiteminuman.repositories.CustomerRepository;
+import com.example.websiteminuman.repositories.HistoryRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.repositories.PaymentRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
@@ -30,7 +34,6 @@ import com.example.websiteminuman.service.CustomerAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 @RequestMapping("/auth/customer")
@@ -40,10 +43,16 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
     private final MinumanRepository minumanRepository;
     private final CustomerAuthService customerService;
-    private final CartRepository cartRepository;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private HistoryRepository historyRepository;
     private final PaymentRepository paymentRepository;
 
-    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper, MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository, PaymentRepository paymentRepository) {
+    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper,
+            MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository,
+            PaymentRepository paymentRepository, HistoryRepository historyRepository) {
+        this.historyRepository = historyRepository;
         this.paymentRepository = paymentRepository;
         this.cartRepository = cartRepository;
         this.minumanRepository = minumanRepository;
@@ -55,27 +64,26 @@ public class CustomerController {
     @GetMapping
     public Iterable<CustomerDto> getAllCustomers() {
         return customerRepository.findAll()
-            .stream()
-            .map(customerMapper::toDto)
-            .toList();
+                .stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
-    
+
     @GetMapping("/sort/{field}")
     public Iterable<CustomerDto> getAllCustomersSorted(@PathVariable String field) {
         return customerRepository.findAll(Sort.by(field))
-            .stream()
-            .map(customerMapper::toDto)
-            .toList();
+                .stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
-   
 
     @PostMapping("/coba/login")
-    public String loginCustomer(@RequestParam String email, @RequestParam String password, 
-                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String loginCustomer(@RequestParam String email, @RequestParam String password,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             // Authenticate user
             CustomerDto customer = customerMapper.toDto(customerService.login2(email, password));
-            
+
             // Simpan informasi customer di session
             HttpSession session = request.getSession();
             session.setAttribute("loggedInCustomer", customer);
@@ -83,7 +91,7 @@ public class CustomerController {
             session.setAttribute("customerName", customer.getUsername());
             session.setAttribute("customerEmail", customer.getEmail());
             session.setAttribute("customerId", customer.getId());
-            
+
             redirectAttributes.addFlashAttribute("message", "Login berhasil! Selamat datang " + customer.getUsername());
             return "redirect:/";
         } catch (Exception e) {
@@ -93,13 +101,14 @@ public class CustomerController {
     }
 
     @PostMapping("/coba/register")
-    public String registerCustomer(@RequestParam String username , @RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes) {
+    public String registerCustomer(@RequestParam String username, @RequestParam String email,
+            @RequestParam String password, RedirectAttributes redirectAttributes) {
         try {
             CustomerDto customerDto = new CustomerDto();
             customerDto.setUsername(username);
             customerDto.setEmail(email);
             customerDto.setPassword(password);
-            
+
             if (customerRepository.existsByEmail(email)) {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terdaftar");
                 return "redirect:/registerCustomer";
@@ -111,9 +120,10 @@ public class CustomerController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Registrasi gagal: " + e.getMessage());
             return "redirect:/registerCustomer";
-            
+
         }
     }
+
     @PostMapping("/logout")
     public String logoutCustomer(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession(false);
@@ -125,17 +135,20 @@ public class CustomerController {
             session.removeAttribute("customerEmail");
             session.invalidate(); // Hapus session sepenuhnya
         }
-        
+
         redirectAttributes.addFlashAttribute("message", "Anda telah berhasil logout");
         return "redirect:/";
     }
+
     @GetMapping("/logout")
     public String logoutCustomerGet(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         return logoutCustomer(request, redirectAttributes);
     }
+
     @PostMapping("/coba/add")
     @ResponseBody
-    public Map<String, Object> addTocart (@RequestParam Long minumanId , RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public Map<String, Object> addTocart(@RequestParam Long minumanId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         Map<String, Object> result = new java.util.HashMap<>();
         String email = (String) request.getSession().getAttribute("customerEmail");
         if (email == null) {
@@ -153,7 +166,7 @@ public class CustomerController {
         }
 
         var minuman = minumanRepository.findById(minumanId).orElse(null);
-        if (minuman == null){
+        if (minuman == null) {
             result.put("success", false);
             result.put("message", "Minuman tidak ditemukan");
             result.put("redirect", "/menu");
@@ -172,44 +185,36 @@ public class CustomerController {
     @GetMapping("/cart")
     @ResponseBody
     public List<Map<String, Object>> getCartItems(HttpServletRequest request) {
-    Long customerId = (Long) request.getSession().getAttribute("customerId");
-    if (customerId == null) {
-        throw new RuntimeException("Anda harus login terlebih dahulu.");
-    }
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        if (customerId == null) {
+            throw new RuntimeException("Anda harus login terlebih dahulu.");
+        }
+        List<Cart> carts = cartRepository.findByCustomerId(customerId);
+        List<Map<String, Object>> result = new ArrayList<>();
 
-    // Ambil semua item cart berdasarkan customerId
-    List<Cart> carts = cartRepository.findByCustomerId(customerId);
+        for (Cart cart : carts) {
+            Minuman minuman = minumanRepository.findById(cart.getMinumanId()).orElse(null);
+            if (minuman == null)
+                continue;
 
-    // Buat list untuk menyimpan hasil dengan data minuman
-    List<Map<String, Object>> result = new ArrayList<>();
+            Map<String, Object> item = new HashMap<>();
+            item.put("id", cart.getId());
+            item.put("minuman", minuman);
 
-    for (Cart cart : carts) {
-        // Ambil data minuman berdasarkan minumanId
-        Minuman minuman = minumanRepository.findById(cart.getMinumanId()).orElse(null);
-
-        // Jika minuman tidak ditemukan, skip item ini
-        if (minuman == null) continue;
-
-        // Gabungkan data cart dan minuman
-        Map<String, Object> item = new HashMap<>();
-        item.put("id", cart.getId());
-        item.put("minuman", minuman); // Masukkan data minuman
-
-        result.add(item);
-    }
+            result.add(item);
+        }
 
         return result;
     }
 
     @DeleteMapping("/cart/{cartId}")
-        @ResponseBody
+    @ResponseBody
     public Map<String, Object> deleteCartItem(@PathVariable Long cartId, HttpServletRequest request) {
         Long customerId = (Long) request.getSession().getAttribute("customerId");
         if (customerId == null) {
             throw new RuntimeException("Anda harus login terlebih dahulu.");
         }
 
-    // Cari item cart berdasarkan ID dan customerId
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Item tidak ditemukan"));
 
@@ -217,10 +222,8 @@ public class CustomerController {
             throw new RuntimeException("Anda tidak memiliki akses untuk menghapus item ini.");
         }
 
-        // Hapus item dari database
         cartRepository.delete(cart);
 
-        // Response sukses
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "Item berhasil dihapus dari keranjang");
@@ -230,26 +233,39 @@ public class CustomerController {
     @PostMapping("/payment")
     @ResponseBody
     public Map<String, Object> savePayment(
-        @RequestParam String metode,
-        @RequestParam Integer nominal,
-        HttpServletRequest request) {
-    Long customerId = (Long) request.getSession().getAttribute("customerId");
-    Map<String, Object> result = new HashMap<>();
-    if (customerId == null) {
-        result.put("success", false);
-        result.put("message", "Anda harus login.");
+            @RequestParam String metode,
+            @RequestParam Integer nominal,
+            HttpServletRequest request) {
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        Map<String, Object> result = new HashMap<>();
+        if (customerId == null) {
+            result.put("success", false);
+            result.put("message", "Anda harus login.");
+            return result;
+        }
+        Payment payment = new Payment();
+        payment.setCustomerId(customerId);
+        payment.setMetode(metode);
+        payment.setNominal(nominal);
+        paymentRepository.save(payment);
+
+        History history = new History();
+        history.setTanggal(new java.util.Date());
+        history.setPaymentId(payment.getId());
+        history.setCustomerId(customerId);
+
+        List<Cart> carts = cartRepository.findByCustomerId(customerId);
+        for (Cart cart : carts) {
+            History itemHistory = new History();
+            itemHistory.setTanggal(new java.util.Date());
+            itemHistory.setPaymentId(payment.getId());
+            itemHistory.setCustomerId(customerId);
+            itemHistory.setMinumanId(cart.getMinumanId());
+            historyRepository.save(itemHistory);
+        }
+        result.put("success", true);
+        result.put("message", "Pembayaran berhasil disimpan.");
         return result;
     }
-    Payment payment = new Payment();
-    payment.setCustomerId(customerId);
-    payment.setMetode(metode);
-    payment.setNominal(nominal);
-    paymentRepository.save(payment);
-
-    result.put("success", true);
-    result.put("message", "Pembayaran berhasil disimpan.");
-    return result;
-}
 
 }
-

@@ -105,33 +105,19 @@
 
         <!-- Tabel Laporan -->
         <section class="bg-[#1f1f1f] p-6 rounded-lg shadow">
-          <h3 class="text-xl font-bold mb-4">Laporan Pesanan</h3>
-          <table class="w-full table-auto text-sm">
-            <thead class="text-left bg-[#2a2a2a]">
-              <tr>
-                <th class="px-4 py-2">No</th>
-                <th class="px-4 py-2">Nama Minuman</th>
-                <th class="px-4 py-2">Jumlah</th>
-                <th class="px-4 py-2">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                th:each="pesanan, iterStat : ${pesananList}"
-                class="hover:bg-[#2a2a2a]"
-              >
-                <td class="px-4 py-2" th:text="${iterStat.count}">1</td>
-                <td class="px-4 py-2" th:text="${pesanan.namaMinuman}">
-                  Latte
-                </td>
-                <td class="px-4 py-2" th:text="${pesanan.jumlah}">120</td>
-                <td class="px-4 py-2" th:text="${pesanan.total}">
-                  Rp 2.400.000
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+        <h3 class="text-xl font-bold mb-4">Laporan Penjualan</h3>
+        <table class="w-full table-auto text-sm">
+          <thead class="text-left bg-[#2a2a2a]">
+            <tr>
+              <th class="px-4 py-2">Tanggal Penjualan</th>
+              <th class="px-4 py-2">Total</th>
+            </tr>
+          </thead>
+          <tbody id="laporanBody">
+          </tbody>
+        </table>
+      </section>
+
 
         <!-- Kelola Menu (Update & Delete) -->
         <section class="bg-[#1f1f1f] p-6 rounded-lg shadow w-full">
@@ -398,6 +384,34 @@
         }
       });
 
+    async function loadLaporanPenjualan() {
+    try {
+      const response = await fetch("/auth/admin/laporan");
+      if (!response.ok) throw new Error("Gagal mengambil data");
+      const data = await response.json();
+
+      const tbody = document.getElementById("laporanBody");
+      let rows = "";
+
+      data.forEach((laporan) => {
+        rows += `
+          <tr class="hover:bg-[#2a2a2a]">
+            <td class="px-4 py-2">${laporan.tanggal}</td>
+            <td class="px-4 py-2">Rp ${laporan.total.toLocaleString("id-ID")}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rows;
+    } catch (err) {
+      console.error("Gagal memuat laporan penjualan:", err);
+    }
+  }
+
+  // Panggil saat halaman dimuat
+  document.addEventListener("DOMContentLoaded", loadLaporanPenjualan);
+
+
     async function loadMinuman() {
       try {
         const response = await fetch("/auth/admin/minuman/get");
@@ -432,7 +446,7 @@
     }
 
     // Fungsi untuk membuka modal edit
-    function openEditModal(id, nama, harga, jenis, deskripsi) {
+    function openEditModal(id, nama, harga, jenis, deskripsi, gambar) {
       if (isModalOpen) return; // Cegah membuka modal jika sudah ada yang terbuka
 
       isModalOpen = true;

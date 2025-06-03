@@ -4,14 +4,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.websiteminuman.dto.AdminDto;
 import com.example.websiteminuman.dto.AuthResponseDto;
+import com.example.websiteminuman.dto.LaporanPenjualanDto;
 import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
 import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.mapper.AdminMapper;
 import com.example.websiteminuman.mapper.MinumanMapper;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -22,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.websiteminuman.repositories.AdminRepository;
+import com.example.websiteminuman.repositories.HistoryRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.AdminAuthService;
 
@@ -45,13 +50,15 @@ public class AdminController {
     private final AdminRepository adminRepository;
     private final MinumanRepository minumanRepository;
     private final AdminAuthService adminService;
+    private final HistoryRepository historyRepository;
 
-    public AdminController(AdminRepository adminRepository, AdminMapper adminMapper, MinumanRepository minumanRepository, AdminAuthService adminService, MinumanMapper minumanMapper) {
+    public AdminController(AdminRepository adminRepository, AdminMapper adminMapper, MinumanRepository minumanRepository, AdminAuthService adminService, MinumanMapper minumanMapper, HistoryRepository historyRepository) {
         this.minumanMapper = minumanMapper;
         this.minumanRepository = minumanRepository;
         this.adminMapper = adminMapper;
         this.adminRepository = adminRepository;
         this.adminService = adminService;
+        this.historyRepository = historyRepository;
     }
 
     @GetMapping
@@ -189,5 +196,16 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping("/laporan")
+    public List<LaporanPenjualanDto> getLaporan() {
+        List<Object[]> result = historyRepository.getLaporanPenjualanRaw();
+        return result.stream()
+                .map(row -> new LaporanPenjualanDto(
+                        ((Date) row[0]).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        ((Number) row[1]).intValue()
+                ))
+                .collect(Collectors.toList());
     }
 }    

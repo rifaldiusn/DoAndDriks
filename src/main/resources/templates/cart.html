@@ -1,251 +1,197 @@
 <!DOCTYPE html>
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cart - DO AND DRINKS</title>
-    <link th:href="@{/main.css}" rel="stylesheet" />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              "cola-red": "#dc2626",
-              "cola-dark": "#991b1b",
-              "cola-gold": "#fbbf24",
-            },
-            fontFamily: {
-              display: ["Georgia", "serif"],
-            },
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - DO AND DRINKS</title>
+  <link th:href="@{/main.css}" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "cola-red": "#dc2626",
+            "cola-dark": "#991b1b",
+            "cola-gold": "#fbbf24",
+          },
+          fontFamily: {
+            display: ["Georgia", "serif"],
           },
         },
-      };
-    </script>
-  </head>
-  <body class="bg-black text-white min-h-screen font-sans">
-    <!-- Main Cart Content -->
-    <div class="max-w-4xl mx-auto px-6 py-16">
-      <h2
-        class="text-3xl font-bold text-cola-gold mb-8 text-center font-display"
-      >
-        KERANJANG BELANJA
-      </h2>
+      },
+    };
+  </script>
+</head>
 
-      <!-- Cart Items -->
-      <div class="space-y-6 mb-8">
-        <!-- Cart Item 1 - Latte -->
-        <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-800">
-                <img
-                  src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=200&h=200&fit=crop&crop=center"
-                  alt="Latte"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h3 class="text-xl font-semibold text-cola-gold">LATTE</h3>
-                <p class="text-gray-400 text-sm">IDR 22K</p>
-              </div>
-            </div>
+<body class="bg-black text-white min-h-screen font-sans">
+  <!-- Main Cart Content -->
+  <div class="max-w-4xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold text-cola-gold mb-8 text-center font-display">
+      KERANJANG BELANJA
+    </h2>
 
-            <div class="flex items-center space-x-4">
-              <div class="flex items-center space-x-3">
-                <button
-                  class="w-8 h-8 bg-cola-red hover:bg-cola-dark rounded-full flex items-center justify-center transition-colors"
-                  onclick="decreaseQuantity('latte')"
-                >
-                  <span class="text-white font-bold">-</span>
-                </button>
-                <span
-                  class="text-lg font-semibold w-8 text-center"
-                  id="latte-qty"
-                  >2</span
-                >
-                <button
-                  class="w-8 h-8 bg-cola-red hover:bg-cola-dark rounded-full flex items-center justify-center transition-colors"
-                  onclick="increaseQuantity('latte')"
-                >
-                  <span class="text-white font-bold">+</span>
-                </button>
-              </div>
-              <button
-                class="text-red-500 hover:text-red-400 transition-colors"
-                onclick="removeItem('latte')"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+    <!-- Cart Items -->
+    <div class="cart-items space-y-6 mb-8">
+      <!-- Data keranjang akan dimuat di sini -->
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
+      <div class="space-y-6">
+        <div class="flex justify-between items-center">
+          <span class="text-lg font-semibold">Total Harga:</span>
+          <span class="text-2xl font-bold text-cola-gold" id="total-price">IDR 71K</span>
         </div>
 
-        <!-- Cart Item 2 - Espresso -->
-        <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-800">
-                <img
-                  src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=200&h=200&fit=crop&crop=center"
-                  alt="Espresso"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <h3 class="text-xl font-semibold text-cola-gold">ESPRESSO</h3>
-                <p class="text-gray-400 text-sm">IDR 27K</p>
-              </div>
-            </div>
+        <div class="border-t border-gray-700 pt-4">
+          <label class="block text-sm font-medium mb-2">Metode Pembayaran:</label>
+          <select id="payment-method"
+            class="payment-method w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-cola-gold focus:outline-none">
+            <option value="">Pilih metode pembayaran</option>
+            <option value="cash">Cash</option>
+            <option value="credit">Credit Card</option>
+            <option value="debit">Debit Card</option>
+            <option value="dana">DANA</option>
+            <option value="ovo">OVO</option>
+            <option value="gopay">GoPay</option>
+            <option value="bank-transfer">Bank Transfer</option>
+          </select>
+        </div>
 
-            <div class="flex items-center space-x-4">
-              <div class="flex items-center space-x-3">
-                <button
-                  class="w-8 h-8 bg-cola-red hover:bg-cola-dark rounded-full flex items-center justify-center transition-colors"
-                  onclick="decreaseQuantity('espresso')"
-                >
-                  <span class="text-white font-bold">-</span>
-                </button>
-                <span
-                  class="text-lg font-semibold w-8 text-center"
-                  id="espresso-qty"
-                  >1</span
-                >
-                <button
-                  class="w-8 h-8 bg-cola-red hover:bg-cola-dark rounded-full flex items-center justify-center transition-colors"
-                  onclick="increaseQuantity('espresso')"
-                >
-                  <span class="text-white font-bold">+</span>
-                </button>
-              </div>
-              <button
-                class="text-red-500 hover:text-red-400 transition-colors"
-                onclick="removeItem('espresso')"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+        <div class="pt-4">
+          <button id="pay-now"
+            class="w-full block text-center bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg">
+            BAYAR SEKARANG
+          </button>
+
+        </div>
+
+        <div class="pt-2">
+          <a href="/menu"
+            class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+            Kembali ke Menu
+          </a>
         </div>
       </div>
-
-      <!-- Cart Summary -->
-      <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
-  <div class="space-y-6">
-    <div class="flex justify-between items-center">
-      <span class="text-lg font-semibold">Total Harga:</span>
-      <span class="text-2xl font-bold text-cola-gold" id="total-price">IDR 71K</span>
     </div>
 
-    <div class="border-t border-gray-700 pt-4">
-      <label class="block text-sm font-medium mb-2">Metode Pembayaran:</label>
-      <select
-        id="payment-method"
-        class="payment-method w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-cola-gold focus:outline-none"
-      >
-        <option value="">Pilih metode pembayaran</option>
-        <option value="cash">Cash</option>
-        <option value="credit">Credit Card</option>
-        <option value="debit">Debit Card</option>
-        <option value="dana">DANA</option>
-        <option value="ovo">OVO</option>
-        <option value="gopay">GoPay</option>
-        <option value="bank-transfer">Bank Transfer</option>
-      </select>
-    </div>
-
-    <div class="pt-4">
-     <button
-     id="pay-now"
-     class="w-full block text-center bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
-    >
-     BAYAR SEKARANG
-    </button>
-
-    </div>
-
-    <div class="pt-2">
-      <a
-        href="/menu"
-        class="block w-full text-center bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
-      >
-        Kembali ke Menu
-      </a>
-    </div>
   </div>
-</div>
+  </div>
 
-      </div>
-    </div>
-
-        <!-- Script JavaScript -->
-    <script>
-      const cartItems = {
-        latte: { price: 22000, qty: 2 },
-        espresso: { price: 27000, qty: 1 },
-      };
-
-      function increaseQuantity(item) {
-        cartItems[item].qty++;
-        document.getElementById(item + "-qty").textContent = cartItems[item].qty;
-        updateTotalPrice();
-      }
-
-      function decreaseQuantity(item) {
-        if (cartItems[item].qty > 1) {
-          cartItems[item].qty--;
-          document.getElementById(item + "-qty").textContent = cartItems[item].qty;
-          updateTotalPrice(); 
-        }
-      }
-
-      function removeItem(item) {
-        if (confirm("Hapus item dari keranjang?")) {
-          delete cartItems[item];
-          location.reload();
-        }
-      }
-
-      function updateTotalPrice() {
-        let total = 0;
-        for (let item in cartItems) {
-          total += cartItems[item].price * cartItems[item].qty;
-        }
-        document.getElementById("total-price").textContent =
-          "IDR " + Math.floor(total / 1000) + "K";
-      }
-
-      //(tidak dalam <script> di dalam <script>)
-      document.addEventListener("DOMContentLoaded", function () {
-        const payNowButton = document.getElementById("pay-now");
-        const paymentSelect = document.getElementById("payment-method");
-
-        if (payNowButton && paymentSelect) {
-          payNowButton.addEventListener("click", function () {
-            const selectedMethod = paymentSelect.value;
-
-            if (!selectedMethod) {
-              alert("Silakan pilih metode pembayaran terlebih dahulu!");
-            } else {
-              window.location.href = "/payment";
-            }
-          });
+  <!-- Script JavaScript -->
+  <script>
+    function updateTotalPrice(cartItems) {
+      let total = 0;
+      cartItems.forEach((item) => {
+        if (item.minuman && item.minuman.harga) {
+          total += item.minuman.harga; // Tidak perlu dikali quantity
         }
       });
+      document.getElementById("total-price").textContent =
+        "IDR " + Math.floor(total / 1000) + "K";
+    }
 
-      // Panggil saat halaman selesai dimuat
-      updateTotalPrice();
-    </script>
-  </body>
+    document.addEventListener("DOMContentLoaded", function () {
+      const cartContainer = document.querySelector(".cart-items");
+
+      // Ambil data cart dari backend
+      fetch("/auth/customer/cart")
+        .then((response) => response.json())
+        .then((cartItems) => {
+          if (cartItems.length === 0) {
+            cartContainer.innerHTML = "<p class='text-gray-400'>Keranjang kosong.</p>";
+            document.getElementById("total-price").textContent = "IDR 0K";
+            return;
+          }
+
+          // Render setiap item di cart
+          cartContainer.innerHTML = cartItems
+            .map(
+              (item) => `
+          <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-800">
+                  <img
+                    src="${item.minuman.gambar || ''}" 
+                    alt="${item.minuman.nama || 'Minuman'}" 
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 class="text-xl font-semibold text-cola-gold">${item.minuman.nama || 'Tidak diketahui'}</h3>
+                  <p class="text-gray-400 text-sm">IDR ${item.minuman.harga || 0}</p>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <span class="text-lg font-semibold">${item.quantity || 0}</span>
+                <button 
+                  class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                  onclick="deleteCartItem(${item.id})"
+                >
+                  Hapus
+                </button>
+              </div>
+            </div>
+          </div>
+        `
+            )
+            .join("");
+
+          // Perbarui total harga
+          updateTotalPrice(cartItems);
+        })
+        .catch((err) => {
+          console.error("Gagal memuat keranjang:", err);
+          cartContainer.innerHTML = "<p class='text-red-500'>Gagal memuat keranjang.</p>";
+          document.getElementById("total-price").textContent = "IDR 0K";
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const payNowButton = document.getElementById("pay-now");
+      const paymentSelect = document.getElementById("payment-method");
+
+      if (payNowButton && paymentSelect) {
+        payNowButton.addEventListener("click", function () {
+          const selectedMethod = paymentSelect.value;
+          if (!selectedMethod) {
+            alert("Silakan pilih metode pembayaran terlebih dahulu!");
+          } else {
+            // Ambil total harga dari elemen
+            const totalPriceText = document.getElementById("total-price").textContent;
+            sessionStorage.setItem("totalHarga", totalPriceText);
+            window.location.href = "/payment";
+          }
+        });
+      }
+    });
+
+    function deleteCartItem(cartId) {
+      if (confirm("Apakah Anda yakin ingin menghapus item ini dari keranjang?")) {
+        fetch(`/auth/customer/cart/${cartId}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert(data.message);
+              location.reload(); // Refresh halaman setelah item dihapus
+            } else {
+              alert("Gagal menghapus item: " + data.message);
+            }
+          })
+          .catch((err) => {
+            console.error("Error saat menghapus item:", err);
+            alert("Terjadi kesalahan saat menghapus item.");
+          });
+      }
+    }
+
+    // Panggil saat halaman selesai dimuat
+    updateTotalPrice();
+  </script>
+</body>
+
 </html>

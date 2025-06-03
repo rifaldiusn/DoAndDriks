@@ -27,7 +27,7 @@ public class Minuman {
     private Admin adminId;
     
     public Minuman(Long id, String nama, String jenis, String deskripsi, String gambar, int harga, Admin admin) {
-        this.adminId = admin;
+        this.adminId = admin;   
         this.id = id;
         this.jenis = jenis;
         this.nama = nama;

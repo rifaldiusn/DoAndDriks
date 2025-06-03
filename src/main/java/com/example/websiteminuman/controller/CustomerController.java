@@ -1,24 +1,39 @@
 package com.example.websiteminuman.controller;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.websiteminuman.dto.CustomerDto;
 import com.example.websiteminuman.entities.Cart;
+import com.example.websiteminuman.entities.History;
+import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.entities.Payment;
 import com.example.websiteminuman.mapper.CustomerMapper;
+import com.example.websiteminuman.repositories.CartRepository;
 import com.example.websiteminuman.repositories.CustomerRepository;
+import com.example.websiteminuman.repositories.HistoryRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
+import com.example.websiteminuman.repositories.PaymentRepository;
 import com.example.websiteminuman.service.CustomerAuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/auth/customer")
@@ -28,8 +43,18 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
     private final MinumanRepository minumanRepository;
     private final CustomerAuthService customerService;
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private HistoryRepository historyRepository;
+    private final PaymentRepository paymentRepository;
 
-    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper, MinumanRepository minumanRepository, CustomerAuthService customerService) {
+    public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper,
+            MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository,
+            PaymentRepository paymentRepository, HistoryRepository historyRepository) {
+        this.historyRepository = historyRepository;
+        this.paymentRepository = paymentRepository;
+        this.cartRepository = cartRepository;
         this.minumanRepository = minumanRepository;
         this.customerMapper = customerMapper;
         this.customerRepository = customerRepository;
@@ -39,34 +64,34 @@ public class CustomerController {
     @GetMapping
     public Iterable<CustomerDto> getAllCustomers() {
         return customerRepository.findAll()
-            .stream()
-            .map(customerMapper::toDto)
-            .toList();
+                .stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
-    
+
     @GetMapping("/sort/{field}")
     public Iterable<CustomerDto> getAllCustomersSorted(@PathVariable String field) {
         return customerRepository.findAll(Sort.by(field))
-            .stream()
-            .map(customerMapper::toDto)
-            .toList();
+                .stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
-   
 
     @PostMapping("/coba/login")
-    public String loginCustomer(@RequestParam String email, @RequestParam String password, 
-                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String loginCustomer(@RequestParam String email, @RequestParam String password,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             // Authenticate user
             CustomerDto customer = customerMapper.toDto(customerService.login2(email, password));
-            
+
             // Simpan informasi customer di session
             HttpSession session = request.getSession();
             session.setAttribute("loggedInCustomer", customer);
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("customerName", customer.getUsername());
             session.setAttribute("customerEmail", customer.getEmail());
-            
+            session.setAttribute("customerId", customer.getId());
+
             redirectAttributes.addFlashAttribute("message", "Login berhasil! Selamat datang " + customer.getUsername());
             return "redirect:/";
         } catch (Exception e) {
@@ -76,13 +101,14 @@ public class CustomerController {
     }
 
     @PostMapping("/coba/register")
-    public String registerCustomer(@RequestParam String username , @RequestParam String email, @RequestParam String password, RedirectAttributes redirectAttributes) {
+    public String registerCustomer(@RequestParam String username, @RequestParam String email,
+            @RequestParam String password, RedirectAttributes redirectAttributes) {
         try {
             CustomerDto customerDto = new CustomerDto();
             customerDto.setUsername(username);
             customerDto.setEmail(email);
             customerDto.setPassword(password);
-            
+
             if (customerRepository.existsByEmail(email)) {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terdaftar");
                 return "redirect:/registerCustomer";
@@ -94,9 +120,10 @@ public class CustomerController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Registrasi gagal: " + e.getMessage());
             return "redirect:/registerCustomer";
-            
+
         }
     }
+
     @PostMapping("/logout")
     public String logoutCustomer(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         HttpSession session = request.getSession(false);
@@ -108,39 +135,138 @@ public class CustomerController {
             session.removeAttribute("customerEmail");
             session.invalidate(); // Hapus session sepenuhnya
         }
-        
+
         redirectAttributes.addFlashAttribute("message", "Anda telah berhasil logout");
         return "redirect:/";
     }
+
     @GetMapping("/logout")
     public String logoutCustomerGet(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         return logoutCustomer(request, redirectAttributes);
     }
+
     @PostMapping("/coba/add")
-    public String addTocart (@RequestParam Long minumanId , RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        String email = (String) request.getSession().getAttribute("loggedIncustomer");
+    @ResponseBody
+    public Map<String, Object> addTocart(@RequestParam Long minumanId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
+        Map<String, Object> result = new java.util.HashMap<>();
+        String email = (String) request.getSession().getAttribute("customerEmail");
         if (email == null) {
-            redirectAttributes.addFlashAttribute("error", "Anda harus login terlebih dahulu");
-            return "redirect:/logincust";
+            result.put("success", false);
+            result.put("message", "Anda harus login terlebih dahulu");
+            result.put("redirect", "/logincust");
+            return result;
         }
         var customer = customerRepository.findByEmail(email);
         if (customer == null) {
-            redirectAttributes.addFlashAttribute("error", "Customer tidak ditemukan");
-            return "redirect:/logincust";
+            result.put("success", false);
+            result.put("message", "Customer tidak ditemukan");
+            result.put("redirect", "/logincust");
+            return result;
         }
 
         var minuman = minumanRepository.findById(minumanId).orElse(null);
-        if (minuman == null){
-            redirectAttributes.addFlashAttribute("error", "Minuman tidak ditemukan");
-            return "redirect:/logincust";
+        if (minuman == null) {
+            result.put("success", false);
+            result.put("message", "Minuman tidak ditemukan");
+            result.put("redirect", "/menu");
+            return result;
+        }
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        Cart cart = new Cart();
+        cart.setCustomerId(customerId);
+        cart.setMinumanId(minumanId);
+        cartRepository.save(cart);
+        result.put("success", true);
+        result.put("message", "Minuman berhasil ditambahkan ke keranjang");
+        return result;
+    }
+
+    @GetMapping("/cart")
+    @ResponseBody
+    public List<Map<String, Object>> getCartItems(HttpServletRequest request) {
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        if (customerId == null) {
+            throw new RuntimeException("Anda harus login terlebih dahulu.");
+        }
+        List<Cart> carts = cartRepository.findByCustomerId(customerId);
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Cart cart : carts) {
+            Minuman minuman = minumanRepository.findById(cart.getMinumanId()).orElse(null);
+            if (minuman == null)
+                continue;
+
+            Map<String, Object> item = new HashMap<>();
+            item.put("id", cart.getId());
+            item.put("minuman", minuman);
+
+            result.add(item);
         }
 
-        Cart cart = new Cart();
-        cart.setCustomerEmail(email);
-        minuman = minumanRepository.findById(minumanId).orElse(null);
-        cart.setMinuman(minuman);
+        return result;
+    }
 
-        return "redirect:/menu";
+    @DeleteMapping("/cart/{cartId}")
+    @ResponseBody
+    public Map<String, Object> deleteCartItem(@PathVariable Long cartId, HttpServletRequest request) {
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        if (customerId == null) {
+            throw new RuntimeException("Anda harus login terlebih dahulu.");
+        }
+
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Item tidak ditemukan"));
+
+        if (!cart.getCustomerId().equals(customerId)) {
+            throw new RuntimeException("Anda tidak memiliki akses untuk menghapus item ini.");
+        }
+
+        cartRepository.delete(cart);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Item berhasil dihapus dari keranjang");
+        return response;
+    }
+
+    @PostMapping("/payment")
+    @ResponseBody
+    public Map<String, Object> savePayment(
+            @RequestParam String metode,
+            @RequestParam Integer nominal,
+            HttpServletRequest request) {
+        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        Map<String, Object> result = new HashMap<>();
+        if (customerId == null) {
+            result.put("success", false);
+            result.put("message", "Anda harus login.");
+            return result;
+        }
+        Payment payment = new Payment();
+        payment.setCustomerId(customerId);
+        payment.setMetode(metode);
+        payment.setNominal(nominal);
+        paymentRepository.save(payment);
+
+        History history = new History();
+        history.setTanggal(new java.util.Date());
+        history.setPaymentId(payment.getId());
+        history.setCustomerId(customerId);
+
+        List<Cart> carts = cartRepository.findByCustomerId(customerId);
+        for (Cart cart : carts) {
+            History itemHistory = new History();
+            itemHistory.setTanggal(new java.util.Date());
+            itemHistory.setPaymentId(payment.getId());
+            itemHistory.setCustomerId(customerId);
+            itemHistory.setMinumanId(cart.getMinumanId());
+            historyRepository.save(itemHistory);
+        }
+        cartRepository.deleteAll(carts);
+        result.put("success", true);
+        result.put("message", "Pembayaran berhasil disimpan.");
+        return result;
     }
 
 }

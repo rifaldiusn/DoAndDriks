@@ -29,16 +29,17 @@
       </h2>
 
       <div class="bg-gray-900 rounded-lg p-6 border border-gray-700 space-y-6">
-        <div>
+        <div class="flex justify-between items-center">
           <p class="text-lg font-semibold">Total Pembayaran:</p>
-          <p class="text-3xl font-bold text-cola-gold">IDR 71K</p>
+          <span class="text-2xl font-bold text-cola-gold" id="total-harga"></span>
         </div>
 
         <a
-            href="/paymentSuccess"
-            class="block text-center w-full bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+          href="#"
+          id="confirm-payment"
+          class="block text-center w-full bg-gradient-to-r from-cola-red to-cola-dark hover:from-cola-dark hover:to-red-800 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
         >
-            KONFIRMASI PEMBAYARAN
+          KONFIRMASI PEMBAYARAN
         </a>
 
         <a
@@ -49,5 +50,34 @@
         </a>
       </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const totalHarga = sessionStorage.getItem("totalHarga") || "IDR 0K";
+        document.getElementById("total-harga").textContent = totalHarga;
+
+        document.getElementById("confirm-payment").addEventListener("click", function (e) {
+          e.preventDefault();
+          // Ambil data
+          const metode = sessionStorage.getItem("paymentMethod") || "cash";
+          const totalHarga = sessionStorage.getItem("totalHarga") || "IDR 0K";
+          // Ambil angka saja dari totalHarga
+          const nominal = parseInt(totalHarga.replace(/\D/g, "")) * 1000;
+
+          fetch("/auth/customer/payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `metode=${encodeURIComponent(metode)}&nominal=${nominal}`
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                window.location.href = "/paymentSuccess";
+              } else {
+                alert(data.message || "Gagal menyimpan pembayaran.");
+              }
+            });
+        });
+      });
+    </script>
   </body>
 </html>

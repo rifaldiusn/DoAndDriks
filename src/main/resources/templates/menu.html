@@ -253,26 +253,23 @@
     });
 });
   function addToCart(minumanId) {
-          fetch('/auth/customer/coba/add', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: 'minumanId=' + encodeURIComponent(minumanId)
-          })
-          .then(response => {
-            if (response.redirected) {
-              window.location.href = response.url; 
-            } else {
-              return response.text();
-            }
-          })
-          .then(data => {
-            alert('Berhasil menambah ke cart!');
-          })
-          .catch(error => {
-            alert('Gagal menambah ke cart!');
-          });
+  fetch('/auth/customer/coba/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'minumanId=' + encodeURIComponent(minumanId)
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message); 
+    if (data.redirect) {
+      window.location.href = data.redirect;
+    }
+  })
+  .catch(err => {
+    alert('Terjadi kesalahan pada server.' + err.message); // Pesan fallback jika server error
+  });
 }
 </script>
   </body>

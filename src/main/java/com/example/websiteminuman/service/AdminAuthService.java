@@ -8,12 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.websiteminuman.dto.AdminDto;
 import com.example.websiteminuman.dto.AuthResponseDto;
-import com.example.websiteminuman.dto.DelUpMinuman;
-import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
-import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.repositories.AdminRepository;
-import com.example.websiteminuman.repositories.MinumanRepository;
 // import com.example.websiteminuman.security.JwtUtil;
 
 @Service
@@ -21,10 +17,9 @@ public class AdminAuthService {
 
     @Autowired
     private AdminRepository adminRepo;
-    private MinumanRepository minumanRepo;
 
-    // @Autowired
-    // private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // @Autowired
     // private JwtUtil jwtUtil;
@@ -33,9 +28,18 @@ public class AdminAuthService {
         Admin admin = adminRepo.findByUsername(dto.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Username Tidak Ditemukan"));
 
-        // if (!passwordEncoder.matches(dto.getPassword(), admin.getPassword())) {
-        //     throw new BadCredentialsException("Invalid credentials");
-        // }
+        String currentPassword = admin.getPassword();
+
+        // Cek jika password sudah di-hash
+        if (!currentPassword.startsWith("$2a$") && !currentPassword.startsWith("$2b$") && !currentPassword.startsWith("$2y$")) {
+            String hashedPassword = passwordEncoder.encode(currentPassword);
+            admin.setPassword(hashedPassword);
+            adminRepo.save(admin);
+        }
+
+        if (!passwordEncoder.matches(dto.getPassword(), admin.getPassword())) {
+             throw new BadCredentialsException("Invalid credentials");
+        }
 
         // String token = jwtUtil.generateToken(admin.getUsername());
         return admin;
@@ -46,9 +50,5 @@ public class AdminAuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("Admin Tidak Ditemukan"));
     }
 
-    public DelUpMinuman delUpMinuman(Long id) {
-        var minuman = minumanRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException("Minuman Tidak Ditemukan"));
-        return new DelUpMinuman(minuman.getId());
-    }
 }
 

@@ -14,7 +14,6 @@ import com.example.websiteminuman.mapper.MinumanMapper;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
@@ -22,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.websiteminuman.repositories.AdminRepository;
@@ -30,14 +28,12 @@ import com.example.websiteminuman.repositories.HistoryRepository;
 import com.example.websiteminuman.repositories.MinumanRepository;
 import com.example.websiteminuman.service.AdminAuthService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 
@@ -69,23 +65,6 @@ public class AdminController {
             .toList();
     }
 
-    // @GetMapping("/{id}")
-    // public ResponseEntity<AdminDto> getAdminById(@PathVariable Long id) {
-    //     var admin = adminRepository.findById(id).orElse(null);
-    //     if (admin == null){
-    //         return ResponseEntity.notFound().build();
-    //     }
-    //     return ResponseEntity.ok(adminMapper.toDto(admin));
-    // }
-
-    // @GetMapping("/sort/{field}")
-    // public Iterable<AdminDto> getSortedAdmins(@PathVariable String field) {
-    //     return adminRepository.findAll(Sort.by(field))
-    //         .stream()
-    //         .map(adminMapper::toDto)
-    //         .toList();
-    // }
-
     @PostMapping("/login")
     public ResponseEntity<?> loginAdmin(@RequestBody AdminDto adminDto, HttpSession session) {
         try {
@@ -95,7 +74,6 @@ public class AdminController {
 
             Admin admin = adminService.login(dto);
 
-            // Simpan username ke session
             session.setAttribute("username", admin.getUsername());
 
             return ResponseEntity.ok("Login berhasil");

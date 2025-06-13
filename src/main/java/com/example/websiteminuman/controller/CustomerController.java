@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.websiteminuman.dto.CustomerDto;
 import com.example.websiteminuman.entities.Cart;
@@ -48,6 +49,8 @@ public class CustomerController {
     @Autowired
     private HistoryRepository historyRepository;
     private final PaymentRepository paymentRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public CustomerController(CustomerRepository customerRepository, CustomerMapper customerMapper,
             MinumanRepository minumanRepository, CustomerAuthService customerService, CartRepository cartRepository,
@@ -82,7 +85,7 @@ public class CustomerController {
             RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
             // Authenticate user
-            CustomerDto customer = customerMapper.toDto(customerService.login2(email, password));
+            CustomerDto customer = customerMapper.toDto(customerService.login(email, password));
 
             // Simpan informasi customer di session
             HttpSession session = request.getSession();
@@ -107,7 +110,11 @@ public class CustomerController {
             CustomerDto customerDto = new CustomerDto();
             customerDto.setUsername(username);
             customerDto.setEmail(email);
-            customerDto.setPassword(password);
+            if (password.length() < 8) {
+                redirectAttributes.addFlashAttribute("error", "Password minimal 8 karakter");
+                return "redirect:/registerCustomer";
+            }
+            customerDto.setPassword(passwordEncoder.encode(password));
 
             if (customerRepository.existsByEmail(email)) {
                 redirectAttributes.addFlashAttribute("error", "Email sudah terdaftar");

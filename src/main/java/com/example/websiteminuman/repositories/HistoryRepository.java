@@ -14,4 +14,5 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
                    "FROM history h JOIN payment p ON h.paymentId = p.id " +
                    "GROUP BY h.tanggal", nativeQuery = true)
     List<Object[]> getLaporanPenjualanRaw();
+    List<History> findByCustomerId(Long customerId);
 }

@@ -276,4 +276,40 @@ public class CustomerController {
         return result;
     }
 
+   @GetMapping("/history")
+@ResponseBody
+public List<Map<String, Object>> getHistory(HttpServletRequest request) {
+    Long customerId = (Long) request.getSession().getAttribute("customerId");
+    List<Map<String, Object>> result = new ArrayList<>();
+    if (customerId == null) return result;
+
+    List<History> histories = historyRepository.findByCustomerId(customerId);
+    for (History h : histories) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", h.getId());
+        map.put("tanggal", h.getTanggal());
+        map.put("paymentId", h.getPaymentId());
+        map.put("minumanId", h.getMinumanId());
+
+        // Ambil detail payment
+        Payment payment = paymentRepository.findById(h.getPaymentId()).orElse(null);
+        if (payment != null) {
+            map.put("nominal", payment.getNominal());
+            map.put("metodePembayaran", payment.getMetode());
+        } else {
+            map.put("nominal", null);
+            map.put("metodePembayaran", null);
+        }
+
+        // Ambil detail minuman
+        Minuman minuman = minumanRepository.findById(h.getMinumanId()).orElse(null);
+        map.put("minuman", minuman);
+
+        result.add(map);
+    }
+    return result;
+}
+
+    
+
 }

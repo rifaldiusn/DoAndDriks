@@ -55,71 +55,7 @@
             </h2>
 
             <!-- Order History List -->
-            <div class="space-y-8 mb-8">
-                <!-- Order 1 -->
-                <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: .1s;">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-2">
-                                <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-001</span>
-                                <span class="text-gray-400 text-xs">Tanggal: 27 Mei 2025</span>
-                            </div>
-                            <div class="ml-1">
-                                <ul class="text-white text-base list-disc list-inside">
-                                    <li>Latte x2 <span class="text-gray-400 text-sm">(IDR 22K)</span></li>
-                                    <li>Espresso x1 <span class="text-gray-400 text-sm">(IDR 27K)</span></li>
-                                </ul>
-                                <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">DANA</span></p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end mt-4 md:mt-0">
-                            <span class="text-lg font-bold text-cola-red">Total: IDR 71K</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Order 2 -->
-                <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: .25s;">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-2">
-                                <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-002</span>
-                                <span class="text-gray-400 text-xs">Tanggal: 25 Mei 2025</span>
-                            </div>
-                            <div class="ml-1">
-                                <ul class="text-white text-base list-disc list-inside">
-                                    <li>Manggo x1 <span class="text-gray-400 text-sm">(IDR 25K)</span></li>
-                                    <li>Jasmine Tea x2 <span class="text-gray-400 text-sm">(IDR 10K)</span></li>
-                                </ul>
-                                <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">Cash</span></p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end mt-4 md:mt-0">
-                            <span class="text-lg font-bold text-cola-red">Total: IDR 45K</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Order 3 -->
-                <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: 4s;">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                        <div>
-                            <div class="flex items-center space-x-3 mb-2">
-                                <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-003</span>
-                                <span class="text-gray-400 text-xs">Tanggal: 22 Mei 2025</span>
-                            </div>
-                            <div class="ml-1">
-                                <ul class="text-white text-base list-disc list-inside">
-                                    <li>Avocado x1 <span class="text-gray-400 text-sm">(IDR 30K)</span></li>
-                                    <li>Milk Tea x1 <span class="text-gray-400 text-sm">(IDR 12K)</span></li>
-                                </ul>
-                                <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">GoPay</span></p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-end mt-4 md:mt-0">
-                            <span class="text-lg font-bold text-cola-red">Total: IDR 42K</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="history-list" class="space-y-8 mb-8"></div>
 
             <div class="pt-2">
                 <a
@@ -135,6 +71,40 @@
             window.addEventListener("DOMContentLoaded", () => {
                 document.querySelectorAll('.fade-in-up').forEach((el, idx) => {
                     el.style.animationDelay = (0.1 + idx*0.15) + 's';
+                });
+            });
+            document.addEventListener("DOMContentLoaded", function () {
+              fetch("/auth/customer/history")
+                .then(res => res.json())
+                .then(histories => {
+                  const container = document.getElementById("history-list");
+                  if (!histories.length) {
+                    container.innerHTML = "<p class='text-gray-400'>Belum ada riwayat pesanan.</p>";
+                    return;
+                  }
+                  container.innerHTML = histories.map((h, idx) => `
+                    <div class="fade-in-up order-gap bg-gray-900 rounded-lg p-6 border border-gray-700" style="animation-delay: ${0.1 + idx*0.15}s;">
+                      <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div>
+                          <div class="flex items-center space-x-3 mb-2">
+                            <span class="text-sm bg-cola-red text-white px-3 py-1 rounded-full font-bold">#INV-${h.paymentId}</span>
+                            <span class="text-gray-400 text-xs">Tanggal: ${new Date(h.tanggal).toLocaleDateString("id-ID")}</span>
+                          </div>
+                          <div class="ml-1 flex items-center">
+                            <img src="${h.minuman?.gambar || ''}" alt="${h.minuman?.nama || ''}" class="w-8 h-8 rounded mr-3 bg-gray-800 object-cover"/>
+                            <div>
+                              <div class="font-bold text-cola-gold">${h.minuman?.nama || 'Minuman ID: ' + h.minumanId}</div>
+                              <div class="text-gray-400 text-sm">Harga: IDR ${h.minuman?.harga || '-'}</div>
+                            </div>
+                          </div>
+                          <p class="text-gray-400 text-sm mt-2">Metode: <span class="text-white">${h.metodePembayaran || '-'}</span></p>
+                        </div>
+                        <div class="flex flex-col items-end mt-4 md:mt-0">
+                          <span class="text-lg font-bold text-cola-red">Total: IDR ${h.nominal ? Math.floor(h.nominal/1000)+'K' : '-'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  `).join("");
                 });
             });
         </script>>

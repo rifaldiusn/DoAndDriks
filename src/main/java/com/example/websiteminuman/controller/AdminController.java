@@ -3,7 +3,6 @@ package com.example.websiteminuman.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.websiteminuman.dto.AdminDto;
-import com.example.websiteminuman.dto.AuthResponseDto;
 import com.example.websiteminuman.dto.LaporanPenjualanDto;
 import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
@@ -16,11 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import com.example.websiteminuman.repositories.AdminRepository;
@@ -115,7 +111,7 @@ public class AdminController {
             System.out.println("CREATE MINUMAN: " + minuman.getNama() + " by " + admin.getUsername());
             return ResponseEntity.ok(minumanRepository.save(minuman));
         } catch (Exception e) {
-            e.printStackTrace(); // debug error sebenarnya
+            e.printStackTrace(); 
             return ResponseEntity.badRequest().body("Error creating Minuman: " + e.getMessage());
         }
     }

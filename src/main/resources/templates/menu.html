@@ -255,6 +255,7 @@
   function addToCart(minumanId) {
   fetch('/auth/customer/coba/add', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },

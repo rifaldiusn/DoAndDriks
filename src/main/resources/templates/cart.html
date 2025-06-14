@@ -172,6 +172,7 @@
       if (confirm("Apakah Anda yakin ingin menghapus item ini dari keranjang?")) {
         fetch(`/auth/customer/cart/${cartId}`, {
           method: "DELETE",
+          credentials: 'include',
         })
           .then((response) => response.json())
           .then((data) => {

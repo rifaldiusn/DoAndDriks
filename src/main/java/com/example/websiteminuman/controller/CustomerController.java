@@ -79,26 +79,27 @@ public class CustomerController {
     }
 
     @PostMapping("/coba/login")
-    public String loginCustomer(@RequestParam String email, @RequestParam String password,
-            RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    @ResponseBody
+    public Map<String, Object> loginCustomer(
+            @RequestParam String email,
+            @RequestParam String password,
+            HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>();
         try {
-            // Authenticate user
             CustomerDto customer = customerMapper.toDto(customerService.login(email, password));
-
-            // Simpan informasi customer di session
             HttpSession session = request.getSession();
             session.setAttribute("loggedInCustomer", customer);
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("customerName", customer.getUsername());
             session.setAttribute("customerEmail", customer.getEmail());
             session.setAttribute("customerId", customer.getId());
-
-            redirectAttributes.addFlashAttribute("message", "Login berhasil! Selamat datang " + customer.getUsername());
-            return "redirect:/";
+            result.put("success", true);
+            result.put("message", "Login berhasil! Selamat datang " + customer.getUsername());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Login gagal: " + e.getMessage());
-            return "redirect:/loginCust";
+            result.put("success", false);
+            result.put("message", "Login gagal: " + e.getMessage());
         }
+        return result;
     }
 
     @PostMapping("/coba/register")

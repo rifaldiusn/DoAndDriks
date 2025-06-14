@@ -41,54 +41,81 @@
 
           <!-- Right Side Elements -->
           <div class="flex items-center space-x-4">
-
-
-        <!-- LOGIN SECTION - Tampil jika BELUM login -->
-        <div th:if="${session.isLoggedIn == null or session.isLoggedIn == false}">
-          <a
-            th:href="@{/logincust}"
-            class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-md group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-          >
-        <span
-          class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"
-        >
-        Login
-        </span>
-        </a>
-        </div>
-
-        <!-- Welcome Message -->
-              <span 
-                th:if="${session.isLoggedIn == true}"
-                class="text-gray-300 text-base sm:block mr-6">
-                Hello,
+            <!-- ADMIN LOGIN SECTION - Tampil jika BELUM login baik customer maupun admin -->
+            <div
+              th:if="${(session.isLoggedIn == null or session.isLoggedIn == false) and (session.isAdminLoggedIn == null or session.isAdminLoggedIn == false)}"
+            >
+              <a
+                th:href="@{/loginAdmin}"
+                class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-md group bg-gradient-to-br from-blue-500 to-cyan-400 group-hover:from-blue-500 group-hover:to-cyan-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-800"
+              >
                 <span
-                  class="text-cola-red font-medium"
-                  th:text="${session.customerName}"
-                  >Customer</span
+                  class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"
                 >
-              </span>
+                  Admin Login
+                </span>
+              </a>
+            </div>
 
-        <!-- Download App Button (selalu tampil) -->
+            <!-- CUSTOMER LOGIN SECTION - Tampil jika BELUM login baik customer maupun admin -->
+            <div
+              th:if="${(session.isLoggedIn == null or session.isLoggedIn == false) and (session.isAdminLoggedIn == null or session.isAdminLoggedIn == false)}"
+            >
+              <a
+                th:href="@{/loginCust}"
+                class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-md group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+              >
+                <span
+                  class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"
+                >
+                  Customer Login
+                </span>
+              </a>
+            </div>
+
+            <!-- Welcome Message untuk Customer -->
+            <span
+              th:if="${session.isLoggedIn == true}"
+              class="text-gray-300 text-base sm:block mr-6"
+            >
+              Hello,
+              <span
+                class="text-cola-red font-medium"
+                th:text="${session.customerName}"
+                >Customer</span
+              >
+            </span>
+
+            <!-- Welcome Message untuk Admin -->
+            <span
+              th:if="${session.isAdminLoggedIn == true}"
+              class="text-gray-300 text-base sm:block mr-6"
+            >
+              Hello Admin,
+              <span
+                class="text-blue-400 font-medium"
+                th:text="${session.adminName}"
+                >Admin</span
+              >
+            </span>
+
+            <!-- Download App Button (selalu tampil) -->
             <a
               th:href="@{/download}"
               class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-md group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
             >
-            <span
-            class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"
-            >
-              Download App
-            </span>
+              <span
+                class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"
+              >
+                Download App
+              </span>
             </a>
 
-
-            <!-- LOGOUT SECTION - Tampil jika SUDAH login -->
+            <!-- LOGOUT SECTION CUSTOMER - Tampil jika SUDAH login customer -->
             <div
               th:if="${session.isLoggedIn == true}"
               class="flex items-center space-x-3"
             >
-
-
               <!-- Logout Button -->
               <form
                 th:action="@{/auth/customer/logout}"
@@ -98,6 +125,30 @@
                 <button
                   type="submit"
                   class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-md group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+                >
+                  <span
+                    class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"
+                  >
+                    Logout
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <!-- LOGOUT SECTION ADMIN - Tampil jika SUDAH login admin -->
+            <div
+              th:if="${session.isAdminLoggedIn == true}"
+              class="flex items-center space-x-3"
+            >
+              <!-- Logout Button -->
+              <form
+                th:action="@{/auth/admin/logout}"
+                method="post"
+                class="inline"
+              >
+                <button
+                  type="submit"
+                  class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-md group bg-gradient-to-br from-blue-500 to-cyan-400 group-hover:from-blue-500 group-hover:to-cyan-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-800"
                 >
                   <span
                     class="relative px-4 py-2 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent text-sm font-medium"

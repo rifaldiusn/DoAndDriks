@@ -2,7 +2,6 @@ package com.example.websiteminuman.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class homepageController {
@@ -32,7 +31,7 @@ public class homepageController {
         return "download";
     }
     
-    @GetMapping("/dashboardAdmin")
+    @GetMapping("/admin/dashboard")
     public String showDashboard() {
         return "dashboardAdmin";
     }
@@ -41,7 +40,8 @@ public class homepageController {
     public String showLoginAdmin() {
         return "loginAdmin";
     }
-     @GetMapping("/dashboard")
+    
+    @GetMapping("/dashboard")
     public String dashboard() {
         return "dashboard"; // dashboard.html
     }
@@ -60,19 +60,22 @@ public class homepageController {
     public String kelolaMenu() {
         return "kelola-menu"; // kelola-menu.html
     }
-    @GetMapping("/logincust")
+
+    @GetMapping("/loginCust")
     public String login() {
-        return "logincust"; // 
+        return "loginCust"; // 
     }
+    
     @GetMapping("/registerCustomer")
     public String register() {
         return "registerCustomer"; // 
     }
-    @GetMapping("/cart")
+
+    @GetMapping("/customer/cart")
     public String cart() {
         return "cart"; // 
     }
-    @GetMapping("/order-history")
+    @GetMapping("/customer/order-history")
     public String orderHistory() {
         return "orderHistory"; // 
     }
@@ -82,12 +85,12 @@ public class homepageController {
         return "editMinumanAdmin"; // 
     }
    
-    @GetMapping("/payment")
+    @GetMapping("/customer/payment")
     public String showPaymentPage() {
         return "payment";
     }
 
-   @GetMapping("/paymentSuccess")
+   @GetMapping("/customer/paymentSuccess")
     public String showPaymentSuccessPage() {
         return "paymentSuccess";
     }

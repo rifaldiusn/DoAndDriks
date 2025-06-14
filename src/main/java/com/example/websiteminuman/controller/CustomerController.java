@@ -99,7 +99,7 @@ public class CustomerController {
             return "redirect:/";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Login gagal: " + e.getMessage());
-            return "redirect:/logincust";
+            return "redirect:/loginCust";
         }
     }
 
@@ -123,7 +123,7 @@ public class CustomerController {
             var customer = customerMapper.toEntity(customerDto);
             customerRepository.save(customer);
             redirectAttributes.addFlashAttribute("message", "Registrasi berhasil, silakan login");
-            return "redirect:/logincust";
+            return "redirect:/loginCust";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Registrasi gagal: " + e.getMessage());
             return "redirect:/registerCustomer";
@@ -161,14 +161,14 @@ public class CustomerController {
         if (email == null) {
             result.put("success", false);
             result.put("message", "Anda harus login terlebih dahulu");
-            result.put("redirect", "/logincust");
+            result.put("redirect", "/loginCust");
             return result;
         }
         var customer = customerRepository.findByEmail(email);
         if (customer == null) {
             result.put("success", false);
             result.put("message", "Customer tidak ditemukan");
-            result.put("redirect", "/logincust");
+            result.put("redirect", "/loginCust");
             return result;
         }
 

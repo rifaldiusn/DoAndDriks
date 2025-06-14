@@ -177,8 +177,16 @@ public class CustomerController {
             result.put("redirect", "/menu");
             return result;
         }
-        Long customerId = (Long) request.getSession().getAttribute("customerId");
-        System.out.println("DEBUG: customerId from session = " + customerId); 
+        Object idObj = request.getSession().getAttribute("customerId");
+        Long customerId = null;
+        if (idObj instanceof Integer) {
+            customerId = ((Integer) idObj).longValue();
+        } else if (idObj instanceof Long) {
+            customerId = (Long) idObj;
+        } else if (idObj instanceof String) {
+            customerId = Long.valueOf((String) idObj);
+        }
+        System.out.println("DEBUG: customerId from session = " + customerId);
         Cart cart = new Cart();
         cart.setCustomerId(customerId);
         cart.setMinumanId(minumanId);
@@ -191,7 +199,15 @@ public class CustomerController {
     @GetMapping("/cart")
     @ResponseBody
     public List<Map<String, Object>> getCartItems(HttpServletRequest request) {
-        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        Object idObj = request.getSession().getAttribute("customerId");
+        Long customerId = null;
+        if (idObj instanceof Integer) {
+            customerId = ((Integer) idObj).longValue();
+        } else if (idObj instanceof Long) {
+            customerId = (Long) idObj;
+        } else if (idObj instanceof String) {
+            customerId = Long.valueOf((String) idObj);
+        }
         if (customerId == null) {
             throw new RuntimeException("Anda harus login terlebih dahulu.");
         }
@@ -216,7 +232,15 @@ public class CustomerController {
     @DeleteMapping("/cart/{cartId}")
     @ResponseBody
     public Map<String, Object> deleteCartItem(@PathVariable Long cartId, HttpServletRequest request) {
-        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        Object idObj = request.getSession().getAttribute("customerId");
+        Long customerId = null;
+        if (idObj instanceof Integer) {
+            customerId = ((Integer) idObj).longValue();
+        } else if (idObj instanceof Long) {
+            customerId = (Long) idObj;
+        } else if (idObj instanceof String) {
+            customerId = Long.valueOf((String) idObj);
+        }
         if (customerId == null) {
             throw new RuntimeException("Anda harus login terlebih dahulu.");
         }
@@ -242,7 +266,15 @@ public class CustomerController {
             @RequestParam String metode,
             @RequestParam Integer nominal,
             HttpServletRequest request) {
-        Long customerId = (Long) request.getSession().getAttribute("customerId");
+        Object idObj = request.getSession().getAttribute("customerId");
+        Long customerId = null;
+        if (idObj instanceof Integer) {
+            customerId = ((Integer) idObj).longValue();
+        } else if (idObj instanceof Long) {
+            customerId = (Long) idObj;
+        } else if (idObj instanceof String) {
+            customerId = Long.valueOf((String) idObj);
+        }
         Map<String, Object> result = new HashMap<>();
         if (customerId == null) {
             result.put("success", false);
@@ -275,40 +307,47 @@ public class CustomerController {
         return result;
     }
 
-   @GetMapping("/history")
-@ResponseBody
-public List<Map<String, Object>> getHistory(HttpServletRequest request) {
-    Long customerId = (Long) request.getSession().getAttribute("customerId");
-    List<Map<String, Object>> result = new ArrayList<>();
-    if (customerId == null) return result;
-
-    List<History> histories = historyRepository.findByCustomerId(customerId);
-    for (History h : histories) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", h.getId());
-        map.put("tanggal", h.getTanggal());
-        map.put("paymentId", h.getPaymentId());
-        map.put("minumanId", h.getMinumanId());
-
-        // Ambil detail payment
-        Payment payment = paymentRepository.findById(h.getPaymentId()).orElse(null);
-        if (payment != null) {
-            map.put("nominal", payment.getNominal());
-            map.put("metodePembayaran", payment.getMetode());
-        } else {
-            map.put("nominal", null);
-            map.put("metodePembayaran", null);
+    @GetMapping("/history")
+    @ResponseBody
+    public List<Map<String, Object>> getHistory(HttpServletRequest request) {
+        Object idObj = request.getSession().getAttribute("customerId");
+        Long customerId = null;
+        if (idObj instanceof Integer) {
+            customerId = ((Integer) idObj).longValue();
+        } else if (idObj instanceof Long) {
+            customerId = (Long) idObj;
+        } else if (idObj instanceof String) {
+            customerId = Long.valueOf((String) idObj);
         }
+        List<Map<String, Object>> result = new ArrayList<>();
+        if (customerId == null)
+            return result;
 
-        // Ambil detail minuman
-        Minuman minuman = minumanRepository.findById(h.getMinumanId()).orElse(null);
-        map.put("minuman", minuman);
+        List<History> histories = historyRepository.findByCustomerId(customerId);
+        for (History h : histories) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", h.getId());
+            map.put("tanggal", h.getTanggal());
+            map.put("paymentId", h.getPaymentId());
+            map.put("minumanId", h.getMinumanId());
 
-        result.add(map);
+            // Ambil detail payment
+            Payment payment = paymentRepository.findById(h.getPaymentId()).orElse(null);
+            if (payment != null) {
+                map.put("nominal", payment.getNominal());
+                map.put("metodePembayaran", payment.getMetode());
+            } else {
+                map.put("nominal", null);
+                map.put("metodePembayaran", null);
+            }
+
+            // Ambil detail minuman
+            Minuman minuman = minumanRepository.findById(h.getMinumanId()).orElse(null);
+            map.put("minuman", minuman);
+
+            result.add(map);
+        }
+        return result;
     }
-    return result;
-}
-
-    
 
 }

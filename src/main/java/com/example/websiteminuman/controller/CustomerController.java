@@ -178,6 +178,7 @@ public class CustomerController {
             return result;
         }
         Long customerId = (Long) request.getSession().getAttribute("customerId");
+        System.out.println("DEBUG: customerId from session = " + customerId); 
         Cart cart = new Cart();
         cart.setCustomerId(customerId);
         cart.setMinumanId(minumanId);

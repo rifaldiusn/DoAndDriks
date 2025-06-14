@@ -6,6 +6,7 @@ import com.example.websiteminuman.dto.AdminDto;
 import com.example.websiteminuman.dto.LaporanPenjualanDto;
 import com.example.websiteminuman.dto.MinumanDto;
 import com.example.websiteminuman.entities.Admin;
+import com.example.websiteminuman.entities.History;
 import com.example.websiteminuman.entities.Minuman;
 import com.example.websiteminuman.mapper.AdminMapper;
 import com.example.websiteminuman.mapper.MinumanMapper;
@@ -160,6 +161,8 @@ public class AdminController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
+            List<History> history = historyRepository.findByMinumanId(minuman.getId());
+            historyRepository.deleteAll(history);
             minumanRepository.delete(minuman);
             String username = (String) session.getAttribute("username");
             if (username == null) {
@@ -177,7 +180,7 @@ public class AdminController {
         List<Object[]> result = historyRepository.getLaporanPenjualanRaw();
         return result.stream()
                 .map(row -> new LaporanPenjualanDto(
-                        ((Date) row[0]).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                        ((java.sql.Date) row[0]).toLocalDate(),
                         ((Number) row[1]).intValue()
                 ))
                 .collect(Collectors.toList());

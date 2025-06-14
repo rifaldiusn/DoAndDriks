@@ -49,13 +49,13 @@
           <select id="payment-method"
             class="payment-method w-full bg-gray-800 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-cola-gold focus:outline-none">
             <option value="">Pilih metode pembayaran</option>
-            <option value="cash">Cash</option>
-            <option value="credit">Credit Card</option>
-            <option value="debit">Debit Card</option>
-            <option value="dana">DANA</option>
-            <option value="ovo">OVO</option>
-            <option value="gopay">GoPay</option>
-            <option value="bank-transfer">Bank Transfer</option>
+            <option value="Cash">Cash</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Debit Card">Debit Card</option>
+            <option value="Dana">DANA</option>
+            <option value="Ovo">OVO</option>
+            <option value="Gopay">GoPay</option>
+            <option value="Bank Transfer">Bank Transfer</option>
           </select>
         </div>
 
@@ -125,7 +125,6 @@
                 </div>
               </div>
               <div class="flex items-center space-x-4">
-                <span class="text-lg font-semibold">${item.quantity || 0}</span>
                 <button 
                   class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
                   onclick="deleteCartItem(${item.id})"
@@ -162,6 +161,7 @@
             // Ambil total harga dari elemen
             const totalPriceText = document.getElementById("total-price").textContent;
             sessionStorage.setItem("totalHarga", totalPriceText);
+            sessionStorage.setItem("paymentMethod", selectedMethod);
             window.location.href = "/customer/payment";
           }
         });

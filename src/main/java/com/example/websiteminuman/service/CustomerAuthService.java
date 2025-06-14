@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.websiteminuman.entities.Customer;
 import com.example.websiteminuman.repositories.CustomerRepository;
-import com.example.websiteminuman.repositories.MinumanRepository;
 
 @Service
 public class CustomerAuthService {

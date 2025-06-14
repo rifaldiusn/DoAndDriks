@@ -10,25 +10,25 @@
     <!-- Sidebar -->
     <div class="flex h-screen">
       <aside class="w-64 bg-[#1a1a1a] p-6 space-y-4">
-        <h1 class="text-2xl font-bold text-red-500">Do and Drinks Admin</h1>
+        <h1
+          class="text-2xl font-bold text-red-500">
+          Do and Drinks Admin
+        </h1>
         <nav class="space-y-2">
           <a
-            href="#"
             onclick="showSection('tambahMinuman')"
             class="block px-4 py-2 rounded hover:bg-red-500 hover:text-white transition"
             >Tambah Minuman</a
           >
           <a
-            href="#"
             onclick="showSection('laporanPesanan')"
             class="block px-4 py-2 rounded hover:bg-red-500 hover:text-white transition"
-            >Laporan Pesanan</a
+            >Laporan Penjualan</a
           >
           <a
-            href="#"
             onclick="showSection('kelolaMenu')"
             class="block px-4 py-2 rounded hover:bg-red-500 hover:text-white transition"
-            >Kelola Menu</a
+            >Kelola Minuman</a
           >
         </nav>
       </aside>
@@ -47,7 +47,7 @@
         </header>
 
         <!-- Tambah Minuman -->
-        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow">
+        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow" id="tambahMinuman">
           <h3 class="text-xl font-bold mb-4">Tambah Minuman</h3>
           <form
             th:action="@{/auth/admin/minuman/create}"
@@ -104,7 +104,7 @@
         </section>
 
         <!-- Tabel Laporan -->
-        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow">
+        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow" id="laporanPesanan">
         <h3 class="text-xl font-bold mb-4">Laporan Penjualan</h3>
         <table class="w-full table-auto text-sm">
           <thead class="text-left bg-[#2a2a2a]">
@@ -120,7 +120,7 @@
 
 
         <!-- Kelola Menu (Update & Delete) -->
-        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow w-full">
+        <section class="bg-[#1f1f1f] p-6 rounded-lg shadow w-full" id="kelolaMenu">
           <h3 class="text-xl font-bold mb-4">Kelola Minuman</h3>
           <table class="w-full table-auto text-sm">
             <thead class="text-left bg-[#2a2a2a]">

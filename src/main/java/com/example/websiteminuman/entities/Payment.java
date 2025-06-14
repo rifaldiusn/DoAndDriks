@@ -1,8 +1,6 @@
 // src/main/java/com/example/websiteminuman/entities/Payment.java
 package com.example.websiteminuman.entities;
 
-import java.util.ArrayList;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

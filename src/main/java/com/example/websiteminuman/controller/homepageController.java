@@ -80,7 +80,7 @@ public class homepageController {
         return "orderHistory"; // 
     }
 
-    @GetMapping("editMinumanAdmin")
+    @GetMapping("/editMinumanAdmin")
     public String editMinuman() {
         return "editMinumanAdmin"; // 
     }
